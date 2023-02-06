@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>Configuración | Coffeeinfoapp</title>
+  <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+  <link href="/static/css/styles.css/" rel="stylesheet" />
+  <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="sb-nav-fixed">
+  <main>
+    {# Cargamos la librería #}
+    {% load bootstrap4 %}
+
+    {# CSS Bootstrap #}
+    {% bootstrap_css %}
+
+    {# Widget Tweaks #}
+    {% load widget_tweaks %}
+    {% load static %}
+    <div class="container__menu">
+      <nav>
+        <ul>
+          <li>
+            <div class="header__superior">
+              <div class="logo">
+                <img
+                  src="https://static.wikia.nocookie.net/paradisebay/images/e/e9/Coffee.png/revision/latest?cb=20180814102721&path-prefix=es"
+                  alt="">
+              </div>
+            </div>
+          </li>
+          <li><a href="{% url 'index' %}">inicio</a></li>
+          <li><a href="#">Servicios</a>
+            <ul>
+              <li><a href="#">Diseño web</a></li>
+              <li><a href="#">Diseño grafico</a></li>
+              <li><a href="#">Ordenadores</a></li>
+              <li><a href="#">Servidores</a></li>
+              <li><a href="#">Analista</a></li>
+            </ul>
+          </li>
+          <li><a href="#">Contactanos</a></li>
+          <li><a href="{% url 'modulo1:leerfr' %}">Foro</a></li>
+          <li><a href="{% url 'modulo1:leercf' %}">Categorias</a></li>
+          <li><a href="#">Nosotros</a></li>
+          <li><a href="{% url 'modulo1:leerpef' %}">Perfil</a></li>
+          <li><a href="{% url 'login' %}">Iniciar sesión</a></li>
+          <li><a href="register.html">Registrate</a></li>
+          <li>
+            <div class="search">
+              <input type="search" placeholder="¿Que deseas buscar?">
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <h1>Configuración del perfil</h1>
+    <table>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- {{ form.as_p }} -->
+        <tr>
+          <td>
+            <div class="form-group">
+              <label for="fnacimiento " class="txt_negrita">Fecha de Nacimiento</label>
+              {{ form.fnacimiento|add_class:"form-control" }}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="form-group">
+              <label for="intereses " class="txt_negrita">intereses</label>
+              {{ form.intereses|add_class:"form-control" }}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <div>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <a href="../" type="submit" class="btn btn-primary">Volver a inicio</a>
+          </div>
+        </tr>
+      </form>
+
+    </table>
+
+
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    crossorigin="anonymous"></script>
+  <script src="js/scripts1.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+  <script src="assets/demo/chart-area-demo.js"></script>
+  <script src="assets/demo/chart-bar-demo.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+  <script src="js/datatables-simple-demo.js"></script>
+</body>
+
+</html>

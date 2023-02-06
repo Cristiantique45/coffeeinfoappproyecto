@@ -1,0 +1,54 @@
+   <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Perfil | Coffeeinfoapp</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    <link href="/static/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+    </head>       
+    <body>     
+        <div class="contenedor">
+            <header>
+                <div class="container__menu">
+                    <nav>
+                        <ul>
+                            <li>
+                                <div class="header__superior">
+                                    <div class="logo">
+                                        <img src="https://static.wikia.nocookie.net/paradisebay/images/e/e9/Coffee.png/revision/latest?cb=20180814102721&path-prefix=es"
+                                            alt="">
+                                    </div>
+                                </div>
+                            </li>
+                            <li><a href="{% url 'index' %}">inicio</a></li>
+                            <li><a href="#">Informacion del café</a>
+                                <ul>
+                                    <li><a href="#">Variedades</a></li>
+                                    <li><a href="#">Enfermedades</a></li>
+                                    <li><a href="#">Insecticidas</a></li>
+                                    <li><a href="#">Plagas</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">Contactanos</a></li>
+                            <li><a href="{% url 'modulo1:leerfr' %}">Foro</a></li>
+                            <li><a href="{% url 'modulo1:leercf' %}">Categorias</a></li>
+                            <li><a href="#">Nosotros</a></li>
+                            <li><a href="{% url 'modulo1:leerpef' %}">Perfil</a></li>
+                            <li><a href="{% url 'login' %}">Iniciar sesión</a></li>
+                            <li><a href="register.html">Registrate</a></li>
+                            <li>
+                                <div class="search">
+                                    <input type="search" placeholder="¿Que deseas buscar?">
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                </div> 
+            </header>
+        </div>
+
+    </body>

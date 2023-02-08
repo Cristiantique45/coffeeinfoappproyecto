@@ -102,6 +102,7 @@ class Imagen(models.Model):
     fpublicacionimagen = models.DateField()
     encabezado = models.CharField(max_length=55)
     postforo_idpostforo = models.ForeignKey('Postforo', models.DO_NOTHING, db_column='postforo_idpostforo')
+    foto = models.ImageField(upload_to="images/",null=True,blank=True)
 
     class Meta:
         managed = False
@@ -236,6 +237,9 @@ class Persona(models.Model):
     direccion = models.CharField(max_length=45)
     fechanacimiento = models.DateField()
     foro_idforo = models.ForeignKey(Foro, models.DO_NOTHING, db_column='foro_idforo')
+    
+    def __str__(self):
+        return (self.nombre1, self.nombre2)
 
     class Meta:
         managed = False

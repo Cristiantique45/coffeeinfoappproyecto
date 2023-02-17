@@ -12,6 +12,10 @@ from django.contrib.messages.views import SuccessMessageMixin
  
 # Habilitamos los formularios en Django
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.http import request
+from django.http import HttpRequest
+from django.http import HttpResponse
 
 
 
@@ -23,9 +27,23 @@ def Home(request):
 
 def Login(request):
     return render (request, "login.html")
-    
-    
-    
+
+
+#--------------------------------------------REGISTRO-------------------------------------------------#
+
+def registro_usuario(request):
+
+    return render(request, 'register.html')    
+
+#-----------------------------------------------------------------------------------------------------#
+
+def foro_login(request):
+    return render (request, "login_foro.html")
+
+def foro_logout(request):
+    return render (request, "logout_foro.html")
+
+ 
     # librerias del crud
 
     #----------------------------ainseticida---------------------------------------------------------------------------------------------------------#
@@ -1203,40 +1221,40 @@ class RegistrarseforoEliminar(SuccessMessageMixin, DeleteView):
     
 #-------------------------------------------Registrarseforo perfilforo-------------------------------------------------------------------#
 
-class ListadoRegistrarseforoperfilforo(ListView):
-    model = Registrarseforoperfilforo
+#class ListadoRegistrarseforoperfilforo(ListView):
+    #model = Registrarseforoperfilforo
     
     
-class RegistrarseforoperfilforoCrear(SuccessMessageMixin, CreateView):
-    model = Registrarseforoperfilforo
-    form = Registrarseforoperfilforo
-    fields = "__all__"
-    success_message ='Categoria creada correctamente'
+#class RegistrarseforoperfilforoCrear(SuccessMessageMixin, CreateView):
+    #model = Registrarseforoperfilforo
+    #form = Registrarseforoperfilforo
+    #fields = "__all__"
+    #success_message ='Categoria creada correctamente'
      
-    def get_success_url(self):        
-        return reverse('modulo1:leerrfpf') # Redireccionamos a la vista principal 'leer'
+    #def get_success_url(self):        
+        #return reverse('modulo1:leerrfpf') # Redireccionamos a la vista principal 'leer'
 
-class RegistrarseforoperfilforoDetalle (DetailView):
-    model = Registrarseforoperfilforo
+#class RegistrarseforoperfilforoDetalle (DetailView):
+    #model = Registrarseforoperfilforo
 
-class RegistrarseforoperfilforoActualizar(SuccessMessageMixin,UpdateView):
-    model =  Registrarseforoperfilforo
-    form = Registrarseforoperfilforo
-    fields = "__all__" # Le decimos a Django que muestre todos los campos de la tabla 'postres' de nuestra Base de Datos 
-    success_message = 'Categoria Actualizado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
+#class RegistrarseforoperfilforoActualizar(SuccessMessageMixin,UpdateView):
+    #model =  Registrarseforoperfilforo
+    #form = Registrarseforoperfilforo
+    #fields = "__all__" # Le decimos a Django que muestre todos los campos de la tabla 'postres' de nuestra Base de Datos 
+    #success_message = 'Categoria Actualizado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
 
-    def get_success_url(self):               
-        return reverse('modulo1:leerrfpf') # Redireccionamos a la vista principal 'leer'
-class RegistrarseforoperfilforoEliminar(SuccessMessageMixin, DeleteView): 
-    model = Registrarseforoperfilforo
-    form = Registrarseforoperfilforo
-    fields = "__all__"     
+    #def get_success_url(self):               
+        #return reverse('modulo1:leerrfpf') # Redireccionamos a la vista principal 'leer'
+#class RegistrarseforoperfilforoEliminar(SuccessMessageMixin, DeleteView): 
+    #model = Registrarseforoperfilforo
+    #form = Registrarseforoperfilforo
+    #fields = "__all__"     
  
     # Redireccionamos a la página principal luego de eliminar un registro o postre
-    def get_success_url(self): 
-        success_message = 'Categoria Eliminado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
-        messages.success (self.request, (success_message))       
-        return reverse('modulo1:leerrfpf') # Redireccionamos a la vista principal 'leer'
+    #def get_success_url(self): 
+        #success_message = 'Categoria Eliminado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
+        #messages.success (self.request, (success_message))       
+        #return reverse('modulo1:leerrfpf') # Redireccionamos a la vista principal 'leer'
     
     
     
@@ -1982,4 +2000,5 @@ class VistasEliminar(SuccessMessageMixin, DeleteView):
         messages.success (self.request, (success_message))       
         return reverse('modulo1:leervi') # Redireccionamos a la vista principal 'leer'
     
-     
+    
+    

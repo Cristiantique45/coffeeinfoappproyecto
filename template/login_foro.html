@@ -8,7 +8,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <title>Comentarios</title>
+  <title>Login | Foro</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
   <link href="/static/css/styles.css/" rel="stylesheet" />
@@ -53,44 +53,33 @@
 
     <div>
       <main>
-        <h1 class="mt-4">Registrate en el foro</h1>
+        <h1 class="mt-4">Iniciar sesión</h1>
 
         <div class="card mb-4">
           <div class="card-body">
-            <form class="form" method="post" enctype="multipart/form-data">
+            <form class="form" method="post"  action="{% url 'index' %}" enctype="multipart/form-data"> 
 
               {# Pasamos el 'csrf_token' de seguridad para poder crear un nuevo registro #}
               {% csrf_token %}
 
               <!-- {{ form.as_p }} -->
-              <div class="form-group">
-                <label for="idregistroforo" class="txt_negrita"></label>
-                {{ form.idregistroforo }}
-                <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto -->
-              </div>
+              <p><div class="input-contenedor-1" class="wrap-input100 validate-input" data-validate = "Enter username"> 
+                                                    
+                <input class="edit-input" class="input100" type="text" name="username" placeholder="Nombre usuario">
+            
+                <span class="focus-input100" data-placeholder="&#xe82a;"></span>
+                
+            </div></p>
+            <p><div class="input-contenedor-1" class="wrap-input100 validate-input" data-validate="Enter password">
+                
+                <input class="edit-input" class="input100" type="password" name="password" placeholder="Contraseña"> 
+                
+                <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+            
+            </div></p>
 
-              <div class="form-group">
-                <label for="nombre " class="descripcion">Nombre</label>
-                {{ form.nombre }}
-                <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto -->
-              </div>
-
-              <div class="form-group">
-                <label for="correo " class="descripcion">Correo Electrónico</label>
-                {{ form.correo}}
-                <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto -->
-              </div>
-
-              <div class="form-group">
-                <label for="foro_idforo " class="descripcion">Foro</label>
-                {{ form.foro_idforo }}
-                <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto -->
-              </div>
-
-
-              <button type="submit" class="btn btn-primary">Registrase</button>
-              <a href="./" type="submit" class="btn btn-primary">Cancelar</a>
-
+      
+              <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
             </form>
           </div>
       </main>

@@ -3,6 +3,7 @@ from modulo1.models import *
 
 # Register your models here.
 
+
 admin.site.register(Ainsecticida)
 admin.site.register(Categoriaforo)
 admin.site.register(Comentario)
@@ -33,7 +34,6 @@ admin.site.register(Reaccionpost)
 admin.site.register(Recomendacioninsect)
 admin.site.register(Recomendacionplaga)
 admin.site.register(Registrarseforo)
-admin.site.register(Registrarseforoperfilforo)
 admin.site.register(Rfinanciero)
 admin.site.register(Rfinancierolote)
 admin.site.register(Temaforo)
@@ -53,5 +53,4 @@ admin.site.register(Valorperdida)
 admin.site.register(Variedad)
 admin.site.register(Variedadgenetica)
 admin.site.register(Vistas)
-
 

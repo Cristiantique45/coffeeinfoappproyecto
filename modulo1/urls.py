@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from .views import *
+from . import views
+from django.contrib.auth.views import LoginView,LogoutView
 
 urlpatterns =[ 
     #--------------------------------------------------------------------Ainsecticida--------------------------------------------------------------------------------------#
@@ -103,6 +105,9 @@ urlpatterns =[
     
     
     #--------------------------------------------------------Foro--------------------------------------------------------------------------------------#
+
+    path('LoginForo', foro_login, name='loginforo'),
+    path('logoutforo', foro_logout, name='logoutforo'),
 
     path('Foro/', ListadoForo.as_view(template_name = "crud/foro/index.html"), name='leerfr'),
     
@@ -536,10 +541,10 @@ urlpatterns =[
     
     #---------------------------------------------------------Registrarse foro---------------------------------------------------#
     
-    path('Registroforo/', ListadoRegistrarseforo.as_view(template_name = "crud/registrarseforo/index.html"), name='leerrefo'),
+    #path('Registroforo/', ListadoRegistrarseforo.as_view(template_name = "crud/registrarseforo/index.html"), name='leerrefo'),
     
     # La ruta 'detalles' en donde mostraremos una pagina con los detalles de un Categoria o registro 
-    path('Registroforo/detalle/<int:pk>',RegistrarseforoDetalle.as_view(template_name = "crud/registrarseforo/detalle.html"), name='detallesrefo'),
+    #path('Registroforo/detalle/<int:pk>',RegistrarseforoDetalle.as_view(template_name = "crud/registrarseforo/detalle.html"), name='detallesrefo'),
  
     # La ruta 'crear' en donde mostraremos un formulario para crear un nuevo Categoria o registro  
     path('Registroforo/crear/', RegistrarseforoCrear.as_view(template_name = "crud/registrarseforo/crear.html"), name='crearrefo'),
@@ -554,19 +559,19 @@ urlpatterns =[
     
      #---------------------------------------------------------Registrarseforo perfilforo---------------------------------------------------#
     
-    path('Regfperff/', ListadoRegistrarseforoperfilforo.as_view(template_name = "crud/registrarseforoperfilforo/index.html"), name='leerrfpf'),
+    #path('Regfperff/', ListadoRegistrarseforoperfilforo.as_view(template_name = "crud/registrarseforoperfilforo/index.html"), name='leerrfpf'),
     
     # La ruta 'detalles' en donde mostraremos una pagina con los detalles de un Categoria o registro 
-    path('Regfperff/detalle/<int:pk>',RegistrarseforoperfilforoDetalle.as_view(template_name = "crud/registrarseforoperfilforo/detalle.html"), name='detallesrfpf'),
+    #path('Regfperff/detalle/<int:pk>',RegistrarseforoperfilforoDetalle.as_view(template_name = "crud/registrarseforoperfilforo/detalle.html"), name='detallesrfpf'),
  
     # La ruta 'crear' en donde mostraremos un formulario para crear un nuevo Categoria o registro  
-    path('Regfperff/crear/', RegistrarseforoperfilforoCrear.as_view(template_name = "crud/registrarseforoperfilforo/crear.html"), name='crearrfpf'),
+    #path('Regfperff/crear/', RegistrarseforoperfilforoCrear.as_view(template_name = "crud/registrarseforoperfilforo/crear.html"), name='crearrfpf'),
     
     # La ruta 'actualizar' en donde mostraremos un formulario para actualizar un categoriao registro de la Base de Datos 
-    path('Regfperff/editar/<int:pk>', RegistrarseforoperfilforoActualizar.as_view(template_name = "crud/registrarseforoperfilforo/actualizar.html"), name='actualizarrfpf'), 
+    #path('Regfperff/editar/<int:pk>', RegistrarseforoperfilforoActualizar.as_view(template_name = "crud/registrarseforoperfilforo/actualizar.html"), name='actualizarrfpf'), 
  
     # La ruta 'eliminar' que usaremos para eliminar un Categoria o registro de la Base de Datos 
-    path('Regfperff/eliminar/<int:pk>', RegistrarseforoperfilforoEliminar.as_view(), name='crud/registrarseforoperfilforo/eliminar.html'),
+    #path('Regfperff/eliminar/<int:pk>', RegistrarseforoperfilforoEliminar.as_view(), name='crud/registrarseforoperfilforo/eliminar.html'),
     
     
     
@@ -918,11 +923,3 @@ urlpatterns =[
     path('Vistas/eliminar/<int:pk>', VistasEliminar.as_view(), name='crud\vistas\eliminar.html'),   
 
 ]
-
-
-
-
-
-
-
-

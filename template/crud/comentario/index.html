@@ -1,138 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
-
+{% load humanize %}
+{% load static %}
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Comentarios</title>
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-    <link href="/static/css/styles.css/" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
+    <link href="/static/css/styles.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body class="cuerpo-foro">
     {# Cargamos la librería #}
     {% load bootstrap4 %}
     {% load static %}
+    <div class="main-head">
+        <nav class="main">
+            <h1 id="logo">Hola</h1>
+            <ul>
+                {% if request.registrarseforo_idregistroforo.is.authenticated %}
+                <li><a href="{% url 'modulo1:logoutforo' %}">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'modulo1:crearrefo' %}">Register</a></li>
+                <li><a href="{% url 'modulo1:loginforo' %}">Login</a></li>
+                {% endif %}           
+            </ul>
+        </nav>
+    </div>
+    <!-------------------------------------
+					Messages 
+	-------------------------------------->
 
-    {% if messages %}
-    <ul class="messages list-group mb-3">
-        {% for message in messages %}
-        <li {% if message.tags %} class="{{ message.tags }} list-group-item list-group-item-primary" {% endif %}>{{
-            message }}</li>
+    <!-------------------------------------
+					Navigation Bar 
+	-------------------------------------->
+    <div class="main">
+
+        <nav class="second-nav">
+            <a class="feed" href="{% url 'index' %}">Inicio</a>
+            {% if request.registrarseforo_idregistroforo.is.authenticated %}
+            <a class="profile" href="{% url 'modulo1:leerpef' %}">Mi Perfil</a>
+            <a class="btn_crear mb-3" href="crear" type="button" class="btn btn-primary">Responder</a>
+            {% endif %}
+        </nav>
+        
+        {% block content %}
+        {% for Comentario in object_list %}
+        <article>
+            <div class="container-article">
+                <img src= "{{ Comentario }}">
+                <div>
+                    <h2 class="username"><a href="#">@{{Comentario.registrarseforo_idregistroforo}}</a></h2>
+                    <i class="clock"></i>
+                    <time data-time="#">{{ Comentario.fechahoracoment|naturaltime}}</time>
+                    <div class="post">{{Comentario.comentario}}</div>
+                </div>
+            </div>
+        </article>
         {% endfor %}
-    </ul>
-    {% endif %}
-    </div>
-    <div>
-        <header>
-            <div class="container__menu">
-                <nav>
-                    <ul>
-                        <li>
-                            <div class="header__superior">
-                                <div class="logo">
-                                    <img src="https://static.wikia.nocookie.net/paradisebay/images/e/e9/Coffee.png/revision/latest?cb=20180814102721&path-prefix=es"
-                                        alt="">
-                                </div>
-                            </div>
-                        </li>
-                        <li><a href="{% url 'index' %}">inicio</a></li>
-                        <li><a href="#">Servicios</a>
-                            <ul>
-                                <li><a href="#">Diseño web</a></li>
-                                <li><a href="#">Diseño grafico</a></li>
-                                <li><a href="#">Ordenadores</a></li>
-                                <li><a href="#">Servidores</a></li>
-                                <li><a href="#">Analista</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#">Contactanos</a></li>
-                        <li><a href="{% url 'modulo1:leerfr' %}">Foro</a></li>
-                        <li><a href="{% url 'modulo1:leercf' %}">Categorias</a></li>
-                        <li><a href="#">Nosotros</a></li>
-                        <li><a href="{% url 'modulo1:leerpef' %}">Perfil</a></li>
-                        <li><a href="{% url 'login' %}">Iniciar sesión</a></li>
-                        <li><a href="register.html">Registrate</a></li>
-                        <li>
-                            <div class="search">
-                                <input type="search" placeholder="¿Que deseas buscar?">
-                            </div>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-            <div>
-                <main>
-                    <div class="card-body">
-                        <div class="card mb-4">
-                            <div class="tablas">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Comentario</th>
-                                            <th>Hora publicación</th>
-                                            <th>Fecha publicación</th>
-                                            <th>Post foro</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for Comentario in object_list %}
-                                        <tr>
-                                            <td>{{ Comentario.comentario }}</td>
-                                            <td>{{ Comentario.hpublicacioncoment }}</td>
-                                            <td>{{ Comentario.fpublicacioncoment }}</td>
-                                            <td>{{ Comentario.postforo_idpostforo }}</td>
-                                            <td>
-                                                <form method="POST" action="eliminar/{{Comentario.idcomentario}}">
-                                                    {% csrf_token %}
-                                                    <div class="btn-group">
 
-                                                        <!-- Creamos 3 botones que son ver, Editar y Eliminar, nos sirven para gestionar nuestros registros o postres -->
-                                                        <a href="editar/{{Comentario.idcomentario}}" title="Editar"
-                                                            type="button" class="btn btn-primary">Editar </a>
-                                                        <button class="btn btn-danger" onclick="return eliminar();"
-                                                            type="submit">
-                                                            Eliminar
-                                                        </button>
-                                                    </div>
-                                                </form </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div align="left" class="btn_crear mb-3">
-                        <a href="crear" type="button" class="btn btn-primary">Responder</a>
-                    </div>
-                </main>
-                <footer class="py-4 bg-light mt-auto">
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2022</div>
-                            <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms &amp; Conditions</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
-    <script src="/static/js/scripts.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-    <script src="/static/js/datatables-simple-demo.js"></script>
+        {% endblock content %}
 
-    </header>
     </div>
+    <footer>
+        <div class="row">
+            <p>Red Social con Django<br>hecha por: <a href="http://www.youtube.com/mundopython">Mundo Python</a></p>
+        </div>
+    </footer>
+
 </body>
 
 </html>

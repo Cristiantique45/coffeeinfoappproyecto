@@ -13,6 +13,12 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 from django import *
 import os
+
+
+
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,10 +27,7 @@ STATICFILES_DIRS=(
     os.path.join(BASE_DIR,'static'),
 )
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
 
-NPM_BIN_PATH = "C:/Program Files/nodejs/npm/"
 
 
 
@@ -37,7 +40,10 @@ SECRET_KEY = 'django-insecure-rhpkm-ay_d4!)=voorzs=$3)*qq&g$-)kc#0*k)1hkjk4+aqo0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    #  "*" significa que hace cualquier url
+    '*'
+]
 
 
 # Application definition
@@ -49,17 +55,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'modulo1.apps.Modulo1Config',
-    'tailwind',
-    'theme',
     'bootstrap4',
     'widget_tweaks',
        
-]
-
-TAILWIND_APP_NAME = 'theme'
-INTERNAL_IPS = [
-    "127.0.0.1",
 ]
 
 
@@ -109,12 +109,12 @@ DATABASES = {
     }
 }
 #algoritmo para encriptar contraseñas, tener contraseñas bien seguras
-PASSWORD_HASHERS = [
-    "django.contrib.auth.hashers.Argon2PasswordHasher"
-    "django.contrib.auth.hashers.PBKDF2PasswordHasher"
-    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher"
-    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher"
-]
+#PASSWORD_HASHERS = [
+    #"django.contrib.auth.hashers.Argon2PasswordHasher"
+    #"django.contrib.auth.hashers.PBKDF2PasswordHasher"
+    #"django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher"
+    #"django.contrib.auth.hashers.BCryptSHA256PasswordHasher"
+#]
 
 
 # Password validation
@@ -162,60 +162,73 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+#EMAIL_USE_TLS = True
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_PORT = 25
+#EMAIL_HOST_USER = 'juanjbastidas0407@gmail.com'
+#EMAIL_HOST_PASSWORD = 'pixelgun3dbrho'
+#EMAIL_BACKEND = 'django.correo.mail.backends.smtp.EmailBackend'
+
+
+
+
+
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+#DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #cuando enviamos un correo desde el sitio web, se lee en la consolala
-EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
 
 #si estamos en despliegue esto ocurre
-if not DEBUG:
+#if not DEBUG:
                                 #utiliza un servicio "smtp"
-    EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = env('EMAIL_HOST')
-    EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-    EMAIL_PORT = env('EMAIL_PORT')
-    EMAIL_USE_TLS = env('EMAIL_USE_TLS')
+    #EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+    #EMAIL_HOST = env('EMAIL_HOST')
+    #EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+    #EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+    #EMAIL_PORT = env('EMAIL_PORT')
+    #EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 
     #aqui pasa hacer segura
-    SESSION_COOKIE_SECURE = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_REDIRECT_EXEMPT = []
-    SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    #SESSION_COOKIE_SECURE = True
+    #SECURE_BROWSER_XSS_FILTER = True
+    #SECURE_CONTENT_TYPE_NOSNIFF = True
+    #SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    #SECURE_HSTS_SECONDS = 31536000
+    #SECURE_REDIRECT_EXEMPT = []
+    #SECURE_SSL_REDIRECT = True
+    #SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
     # django-ckeditor will not work with S3 through django-storages without this line in settings.py
-    AWS_QUERYSTRING_AUTH = False
+    #AWS_QUERYSTRING_AUTH = False
 
     # aws settings
 
-    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+    #AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+    #AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+    #AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
 
 
-    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-    AWS_DEFAULT_ACL = 'public-read'
+    #AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    #AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    #AWS_DEFAULT_ACL = 'public-read'
 
     # s3 static settings
 
-    STATIC_LOCATION = 'static'
-    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    #STATIC_LOCATION = 'static'
+    #STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+    #STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
     # s3 public media settings
 
-    PUBLIC_MEDIA_LOCATION = 'media'
-    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
-    DEFAULT_FILE_STORAGE = 'core.storage_backends.MediaStore'
+     #PUBLIC_MEDIA_LOCATION = 'media'
+     #MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
+     #DEFAULT_FILE_STORAGE = 'core.storage_backends.MediaStore'
 
-    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+     #STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+     #STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

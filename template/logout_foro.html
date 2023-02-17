@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Temas</title>
+    <title>Comentarios</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
     <link href="/static/css/styles.css/" rel="stylesheet" />
@@ -19,25 +19,17 @@
     {# Cargamos la librería #}
     {% load bootstrap4 %}
     {% load static %}
-
-    {% if messages %}
-    <ul class="messages list-group mb-3">
-        {% for message in messages %}
-        <li>{% if message.tags %} class="{{ message.tags }} list-group-item list-group-item-primary" {% endif %}>{{
-            message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
     <div class="main-head">
         <nav class="main">
             <h1 id="logo">Hola</h1>
             <ul>
                 <li><a href="#">Logout</a></li>
-                <li><a href="#">Register</a></li>
-                <li><a href="#">Login</a></li>
+                <li><a href="{% url 'modulo1:crearrefo' %}">Register</a></li>
+                <li><a href="{% url 'login' %}">Login</a></li>
             </ul>
         </nav>
     </div>
+    
     <!-------------------------------------
 					Messages 
 	-------------------------------------->
@@ -48,21 +40,16 @@
     <div class="main">
 
         <nav class="second-nav">
-            <a class="feed" href="#">Inicio</a>
+            <a class="feed" href="{% url 'index' %}">Inicio</a>
             <a class="profile" href="{% url 'modulo1:leerpef' %}">Mi Perfil</a>
-            <a class="new" href="#">Crear nuevo post</a>
+            <a class="btn_crear mb-3" href="crear" type="button" class="btn btn-primary">Responder</a>
         </nav>
-        {% for Temaforo in object_list %}
-        <article>
-            <div class="container-article">
-                <div>
-                    <i class="clock"></i>
-                    <div class="post"><a href="{% url 'modulo1:leerco' %}">{{Temaforo.nombre}}</div></a>
-                </div>
-            </div>
-        </article>                 
 
-        {% endfor %}
+    {% block content %}
+}   <h1>Te has logeado</h1>
+    {% endblock content %}
+    
+
     </div>
     <footer>
         <div class="row">

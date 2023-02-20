@@ -16,82 +16,31 @@
   <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 
-<body class="cuerpo-foro">
-  {# Cargamos la librería #}
-  {% load bootstrap4 %}
-  {% load static %}
-    <header class="main-head">
-      <nav class="main">
-        <h1 id="logo">Hola</h1>
-        <ul>
-          <li><a href="#">Logout</a></li>
-          <li><a href="{% url 'register_usuario' %}">Register</a></li>
-          <li><a href="{% url 'login' %}">Login</a></li>
-        </ul>
-      </nav>
-    </header>
-  {% if messages %}
-    {% for message in messages %}
-    <div class="notification {{ message.tags}}">
-      {{ message }}
-    </div>
-    {% endfor %}
-  {% endif %}
+<body>
+  <div class="login">
+    {# Cargamos la librería #}
+    {% load bootstrap4 %}
+    <h1>Iniciar sesión</h1>
+    <form class="form" method="post" action="{% url 'index' %}" enctype="multipart/form-data">
+      {# Pasamos el 'csrf_token' de seguridad para poder crear un nuevo registro #}
+      {% csrf_token %}
 
-
-
-  <!-------------------------------------
-					Navigation Bar 
-	-------------------------------------->
-  <div class="main">
-
-    <nav class="second-nav">
-      <a class="feed" href="{% url 'index' %}">Inicio</a>
-      <a class="profile" href="{% url 'modulo1:leerpef' %}">Mi Perfil</a>
-      <a class="btn_crear mb-3" href="crear" type="button" class="btn btn-primary">Responder</a>
-    </nav>
-
-    <div>
-      <main>
-        <h1 class="mt-4">Iniciar sesión</h1>
-
-        <div class="card mb-4">
-          <div class="card-body">
-            <form class="form" method="post"  action="{% url 'index' %}" enctype="multipart/form-data"> 
-
-              {# Pasamos el 'csrf_token' de seguridad para poder crear un nuevo registro #}
-              {% csrf_token %}
-
-              <!-- {{ form.as_p }} -->
-              <p><div class="input-contenedor-1" class="wrap-input100 validate-input" data-validate = "Enter username"> 
-                                                    
-                <input class="edit-input" class="input100" type="text" name="username" placeholder="Nombre usuario">
-            
-                <span class="focus-input100" data-placeholder="&#xe82a;"></span>
-                
-            </div></p>
-            <p><div class="input-contenedor-1" class="wrap-input100 validate-input" data-validate="Enter password">
-                
-                <input class="edit-input" class="input100" type="password" name="password" placeholder="Contraseña"> 
-                
-                <span class="focus-input100" data-placeholder="&#xe80f;"></span>
-            
-            </div></p>
-
-      
-              <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-            </form>
-          </div>
-      </main>
-
-
-    </div>
-    <footer>
-      <div class="row">
-        <p>Red Social con Django<br>hecha por: <a href="http://www.youtube.com/mundopython">Mundo Python</a></p>
+      <!-- {{ form.as_p }} -->
+      <p>
+      <div class="input-contenedor-1" class="wrap-input100 validate-input" data-validate="Enter username">
+        <input class="edit-input" class="input100" type="text" name="username" placeholder="Nombre usuario">
+        <span class="focus-input100" data-placeholder="&#xe82a;"></span>
       </div>
-    </footer>
-
+      </p>
+      <p>
+      <div class="input-contenedor-1" class="wrap-input100 validate-input" data-validate="Enter password">
+        <input class="edit-input" class="input100" type="password" name="password" placeholder="Contraseña">
+        <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+      </div>
+      </p>
+      <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+    </form>
+  </div>
 </body>
 
 </html>

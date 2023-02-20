@@ -59,7 +59,23 @@ INSTALLED_APPS = [
     'modulo1.apps.Modulo1Config',
     'bootstrap4',
     'widget_tweaks',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
        
+]
+
+SITE_ID = 1
+
+#con esto especificamos que al hacer login funcione
+AUTHENTICATION_BACKENDS = [
+    
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 
@@ -162,12 +178,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-#EMAIL_USE_TLS = True
-#EMAIL_HOST = 'smtp.gmail.com'
-#EMAIL_PORT = 25
-#EMAIL_HOST_USER = 'juanjbastidas0407@gmail.com'
-#EMAIL_HOST_PASSWORD = 'pixelgun3dbrho'
-#EMAIL_BACKEND = 'django.correo.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'juanjbastidas0407@gmail.com'
+EMAIL_HOST_PASSWORD = 'pixelgun3dbrho'
+EMAIL_BACKEND = 'django.correo.mail.backends.smtp.EmailBackend'
 
 
 

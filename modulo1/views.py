@@ -31,9 +31,23 @@ def Login(request):
 
 #--------------------------------------------REGISTRO-------------------------------------------------#
 
-def registro_usuario(request):
+def registro(request):
+    return render(request, 'registration/register.html')
 
-    return render(request, 'register.html')    
+#def registro_usuario(request):
+
+    #if request.method == 'POST':
+        #formulario = CustomUserForm(request.POST)
+        #if formulario.is_valid():
+           # formulario.save()
+            #autentiar el usuario y regresar al inicio
+            #username = formulario.cleaned_data['username']
+            #password = formulario.cleaned_data['password']
+            #user = authenticate(username=username, password=password)
+            #login(request, user)
+            #return redirect(to='home')
+
+    #return render(request, 'registration/register.html')    
 
 #-----------------------------------------------------------------------------------------------------#
 
@@ -1189,10 +1203,19 @@ class RegistrarseforoCrear(SuccessMessageMixin, CreateView):
     model = Registrarseforo
     form = Registrarseforo
     fields = "__all__"
-    success_message ='Categoria creada correctamente'
-     
+    
+    def form_valido(self, Registrarseforo):
+        if self.request.method == 'POST':
+            registro = Registrarseforo(self.request.POST)
+            if registro.is_valid():
+                nombre = registro.cleaned_data['nombre']
+                messages.success(request, f'Usuario {nombre} creado')
+
+        else:
+            registro = Registrarseforo()
+        
     def get_success_url(self):        
-        return reverse('modulo1:leerrefo') # Redireccionamos a la vista principal 'leer'
+        return reverse('modulo1:leerco') # Redireccionamos a la vista principal 'leer'
 
 class RegistrarseforoDetalle (DetailView):
     model = Registrarseforo
@@ -2000,5 +2023,6 @@ class VistasEliminar(SuccessMessageMixin, DeleteView):
         messages.success (self.request, (success_message))       
         return reverse('modulo1:leervi') # Redireccionamos a la vista principal 'leer'
     
-    
+#------------------------------------------------REGISTRO-----------------------------------------------------
+
     

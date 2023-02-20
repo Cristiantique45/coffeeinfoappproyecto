@@ -20,6 +20,9 @@ from . import views
 from django.contrib.auth.views import LoginView,LogoutView
 
 urlpatterns =[ 
+              
+    path('accounts/', include('allauth.urls')),
+
     #--------------------------------------------------------------------Ainsecticida--------------------------------------------------------------------------------------#
      
     path('Ainsecticida/', ListadoAinsecticida.as_view(template_name = "crud/ainsecticida/index.html"), name='leera'),
@@ -106,8 +109,8 @@ urlpatterns =[
     
     #--------------------------------------------------------Foro--------------------------------------------------------------------------------------#
 
-    path('LoginForo', foro_login, name='loginforo'),
-    path('logoutforo', foro_logout, name='logoutforo'),
+    path('Loginforo/', foro_login, name='loginforo'),
+    path('logoutforo/', foro_logout, name='logoutforo'),
 
     path('Foro/', ListadoForo.as_view(template_name = "crud/foro/index.html"), name='leerfr'),
     

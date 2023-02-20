@@ -278,7 +278,7 @@ class Persona(models.Model):
     nombre2 = models.CharField(max_length=45, blank=True, null=True)
     apellido1 = models.CharField(max_length=45)
     apellido2 = models.CharField(max_length=45, blank=True, null=True)
-    correo = models.CharField(max_length=45)
+    correo = models.EmailField(max_length=45)
     telefono = models.CharField(max_length=12)
     direccion = models.CharField(max_length=45)
     fechanacimiento = models.DateField()
@@ -382,7 +382,7 @@ class Recomendacionplaga(models.Model):
 class Registrarseforo(models.Model):
     idregistroforo = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=45)
-    correo = models.CharField(max_length=45)
+    correo = models.EmailField(max_length=45)
     foro_idforo = models.ForeignKey(Foro, models.DO_NOTHING, db_column='foro_idforo')
     
     def __str__(self):

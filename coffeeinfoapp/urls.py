@@ -14,9 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
 from modulo1.views import *
-from django.contrib.auth.views import LoginView,LogoutView #, password_reset, password_reset_done, password_reset_cofirm, password_reset_complete
+from django.contrib.auth.views import LoginView, LogoutView #password_reset, password_reset_done, password_reset_cofirm, password_reset_complete
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -32,7 +32,10 @@ urlpatterns = [
     path('home/', Home, name= 'index'),
 
     #----------------------------------registro-----------------------------------------------
-    path('register/', registro_usuario, name='register_usuario'),
+    path('register/', registro, name="registro"),
+
+    
+    #path('register/', registro_usuario, name='register_usuario'),
     
     #----------------------------------------recuperar contraseña--------------------------------
     #path(r'^reset/password_reset', password_reset, {'template_name':'registration/password_reset_form.html',

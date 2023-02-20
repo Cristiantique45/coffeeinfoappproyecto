@@ -42,30 +42,52 @@
                             <a href="crear" type="button" class="btn btn-primary">Crear</a>
                         </div>
                         <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                Nivel
+                            <div class="bloque">
+                                <h1>Gastos</h1>
                             </div>
-                            <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>Código Gasto</th>
-                                            <th>Nombre</th> 
-											<th>Unidad</th> 
-											<th>Periodo</th>                                          
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Código Gasto</th>
-                                            <th>Nombre</th> 
-											<th>Unidad</th> 
-											<th>Periodo</th>  
-                                        </tr>
-                                    </tfoot>
+                            <div class="main">
+
+                                <nav class="second-nav">
+                                    <ul>
+                                        <li class="second-nav">Código Gasto</li>
+                                        <li class="second-nav">Nombre</li> 
+                                        <li class="second-nav">Unidad</li> 
+                                        <li class="second-nav">Periodo</li>                                          
+                                    </ul>
+                                </nav>
+                            
+                                
+                             {% for Gastos in object_list %}
+
+                            <div class="list-group">
+                                <ul>
+                                    <li>{{ Gastos.idgastos }}</li>
+                                    <li>{{ Gastos.nombre  }}</li> 
+                                    <li>{{ Gastos.unidad  }}</li> 
+                                    <li>{{ Gastos.periodo  }}</li>       
+                                    <li>
+                                        <form method="POST" action="eliminar/{{Gastos.idgastos}}">
+                                            {% csrf_token %}
+                                            <div class="btn-group">
+          
+                                                <!-- Creamos 3 botones que son ver, Editar y Eliminar, nos sirven para gestionar nuestros registros o postres -->
+                                                <a href="detalle/{{Gastos.idgastos}}" title="Ver" type="button" class="btn btn-success">Ver </a>
+                                                <a href="editar/{{Gastos.idgastos}}" title="Editar" type="button" class="btn btn-primary">Editar </a>
+                                                <button class="btn btn-danger" onclick="return eliminar();" type="submit">
+                                                  Eliminar
+                                                </button>
+                                            </div>
+                                        </form> 
+
+                                    </li>                                    
+                                </ul>
+                            </div>
+
+                            
+
+
                                     <tbody>
-                                        {% for Gastos in object_list %}
+                                        
                                             <tr>
                                                 <td>{{ Gastos.idgastos }}</td>
                                                 <td>{{ Gastos.nombre  }}</td>
@@ -83,7 +105,7 @@
                                                               Eliminar
                                                             </button>
                                                         </div>
-                                                    </form    
+                                                    </form>  
                                                 </td>     
                                             </tr>
                                       
@@ -91,6 +113,7 @@
                                         
                                     </tbody>
                                 </table>
+                                
                             </div>
                         </div>
                     </div>

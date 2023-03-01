@@ -21,24 +21,36 @@
     {# Cargamos la librería #}
     {% load bootstrap4 %}
     <h1>Iniciar sesión</h1>
-    <form class="form" method="post" action="{% url 'index' %}" enctype="multipart/form-data">
+
+    {% if messages %}
+    <ul class="mensaje">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form class="form" method="post" action="" enctype="multipart/form-data">
       {# Pasamos el 'csrf_token' de seguridad para poder crear un nuevo registro #}
       {% csrf_token %}
 
       <!-- {{ form.as_p }} -->
       <p>
-      <div class="input-contenedor-1" class="wrap-input100 validate-input" data-validate="Enter username">
-        <input class="edit-input" class="input100" type="text" name="username" placeholder="Nombre usuario">
+      <div class="input-contenedor-1" class="wrap-input100 validate-input" data-validate="Enter_username">
+        <!--<input class="edit-input" class="input100" type="text" name="username" placeholder="Nombre usuario">-->
         <span class="focus-input100" data-placeholder="&#xe82a;"></span>
+        {{ form.username }}
       </div>
       </p>
       <p>
-      <div class="input-contenedor-1" class="wrap-input100 validate-input" data-validate="Enter password">
-        <input class="edit-input" class="input100" type="password" name="password" placeholder="Contraseña">
+      <div class="input-contenedor-1" class="wrap-input100 validate-input" data-validate="Enter_password">
+        <!--<input class="edit-input" class="input100" type="password" name="password" placeholder="Contraseña">-->
         <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+        {{ form.password}}
       </div>
       </p>
       <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+
     </form>
   </div>
 </body>

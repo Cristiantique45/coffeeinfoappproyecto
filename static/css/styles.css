@@ -719,7 +719,7 @@ header {
   position: fixed;
   top: 0;
   left: 0;
-  background: #fff;
+  background: #ceb36f;
 }
 
 /*------------------------------------------------------HEADER SUPERIOR----------------------------------*/ 
@@ -956,7 +956,7 @@ body{
 
 }
 .seccion-perfil-usuario .perfil-usuario-body {
-  width: 75%;
+  width: 80%;
   position: relative;
 
 }
@@ -988,7 +988,7 @@ body{
   margin-bottom: 0;
 }
 .seccion-perfil-usuario .lista-datos {
-  width: 50%;
+  width: 20%;
   list-style: none;
 
 }
@@ -2530,6 +2530,21 @@ input {
 input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgba(255,255,255,0.2); }
 
 
+
+.mensaje {
+  background-color: #f5f5f5;
+  border: 1px solid #000;
+  margin-bottom: 10px;
+  padding: 10px;
+  list-style: none;
+}
+
+.mensaje li {
+  margin-bottom: 5px;
+  padding: 5px;
+}
+
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 /*-------------------------------------------------------------estilos para registrarse foro -------------------------------------------------------*/
@@ -2587,6 +2602,17 @@ a:hover{
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+/*--------------------------estilos para la barra de busqueda foro----------------------------------------------*/
+.input-box{
+  display: block
+}
+.boton{
+  display: block;
+  display: inline-block;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------*/
 
 
 /*-------------------------------------estilos.css para el foro-----------------------------------------------------*/
@@ -3319,13 +3345,13 @@ template {
 /*--------------------------------------------------------------------------------------------------------------*/
 
 
-/*--------------------------------------------estilos para el foro 2------------------------------------------------------------------*/
+/*--------------------------------------------estilos para el foro  plantilla------------------------------------------------------------------*/
 
 
 
 .cuerpo-foro{
 	color: #fff;
-	background-color: red;
+	background-color: #623421;
 	font-family: verdana, arial, sans-serif;
 	font-size: 10px;
 	line-height: 15px;

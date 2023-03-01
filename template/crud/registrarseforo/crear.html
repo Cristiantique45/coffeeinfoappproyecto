@@ -28,7 +28,7 @@
       <div class="card">
         <h2 class="card-title text-center">Registrarse</h2>
         <div class="card-body py-md-4">
-          <form class="form" method="post" action="{% url 'modulo1:leerco' %}" enctype="multipart/form-data">
+          <form class="form" method="post" action="" kenctype="multipart/form-data">
             {# Pasamos el 'csrf_token' de seguridad para poder crear un nuevo registro #}
             {% csrf_token %}
 
@@ -40,7 +40,7 @@
             </div>
 
             <div class="form-group">
-              <label for="nombre " class="descripcion">Nombre</label>
+              <label for="nombre " class="descripcion">Nombre de usuario</label>
               {{ form.nombre|add_class:"form-control"  }}
               <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto -->
             </div>
@@ -51,18 +51,24 @@
               <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto -->
             </div>
 
+            <p>
+              <div class="input-contenedor-1" class="wrap-input100 validate-input" data-validate="Enter password">
+                <!--<input class="edit-input" class="input100" type="password" name="password" placeholder="Contraseña">-->
+                <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+                  {{ form.password|add_class:"input100" }}
+              </div>
+            </p>
+
             <div class="form-group">
-              <label for="foro_idforo " class="descripcion">Foro</label>
+              <label for="foro_idforo" class="descripcion">Foro</label>
               {{ form.foro_idforo|add_class:"form-control" }}
               <!-- Usamos la librería 'widget_tweaks' para crear esta caja de texto -->
             </div>
-
-
-          
+  
             <div class="d-flex flex-row align-items-center justify-content-between">
-              <a href="{% url 'modulo1:loginforo' %}">Login</a>
+              <a href="{% url 'modulo1:loginforo' %}">Iniciar sesión</a>
               <button type="submit" class="btn btn-primary">Registrase</button>
-            <a href="./" type="submit" class="btn btn-primary">Cancelar</a>
+            <a href="{% url 'modulo1:leercf' %}" type="submit" class="btn btn-primary">Cancelar</a>
             </div>
           </form>
         </div>

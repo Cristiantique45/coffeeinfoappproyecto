@@ -9,6 +9,8 @@ from django.db import models
 from django.conf import settings
 import os
 from django.utils import timezone
+from django.contrib.auth.hashers import make_password, check_password as auth_check_password
+
 
 class Ainsecticida(models.Model):
     idainsecticida = models.AutoField(primary_key=True)
@@ -25,7 +27,7 @@ class Categoriaforo(models.Model):
     nombre = models.CharField(max_length=65)
     descripcion = models.TextField()
     foro_idforo = models.ForeignKey('Foro', models.DO_NOTHING, db_column='foro_idforo')
-
+    
     def __str__(self):
         return f'Categoria: {self.nombre}'
 
@@ -41,10 +43,10 @@ class Comentario(models.Model):
     postforo_idpostforo = models.ForeignKey('Postforo', models.DO_NOTHING, db_column='postforo_idpostforo')
     registrarseforo_idregistroforo = models.ForeignKey('Registrarseforo', models.DO_NOTHING, db_column='registrarseforo_idregistroforo')
     imagen_idimagen = models.ForeignKey('Imagen', models.DO_NOTHING, db_column='imagen_idimagen')
-    perfilforo_idperfilforo = models.ForeignKey('Perfilforo', models.DO_NOTHING, db_column='perfilforo_idperfilforo')
-
+    perfilforo_idperfilforo = models.ForeignKey('Perfilforo', models.DO_NOTHING, db_column='perfilforo_idperfilforo', related_name='comentarios')
+    
     def __str__(self):
-        return f'Id: {self.registrarseforo_idregistroforo} {self.comentario}'
+        return f'{self.perfilforo_idperfilforo} {self.registrarseforo_idregistroforo} -> {self.comentario}'
 
     #la clase meta nos dice como se va comportar esa clase
     class Meta:
@@ -58,7 +60,7 @@ class Crearhiloforo(models.Model):
     idcrearhilo = models.AutoField(primary_key=True)
     hilo = models.CharField(max_length=60)
     perfilforo_idperfilforo = models.ForeignKey('Perfilforo', models.DO_NOTHING, db_column='perfilforo_idperfilforo')
-
+    
     def __str__(self):
         return f'Hilo: {self.hilo}'
 
@@ -70,7 +72,7 @@ class Crearhiloforo(models.Model):
 class Enfermedades(models.Model):
     idenfermedades = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=45)
-    imagen = models.TextField(blank=True, null=True)
+    imagen = models.CharField(max_length=120, blank=True, null=True)
     descripcion = models.TextField()
     sintomas = models.TextField()
     danios = models.TextField()
@@ -85,6 +87,7 @@ class Enfermedades(models.Model):
 class Foro(models.Model):
     idforo = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=45)
+    
     
     def __str__(self):
         return f'{self.nombre}'
@@ -107,12 +110,9 @@ class Gastos(models.Model):
 
 class Historial(models.Model):
     idhistorial = models.AutoField(primary_key=True)
-    fecha = models.DateTimeField(default=timezone.now)
+    fecha = models.DateTimeField()
     persona_idpersona = models.ForeignKey('Persona', models.DO_NOTHING, db_column='persona_idpersona')
 
-
-    def __str__(self):
-        return f'N° : {self.idhistorial} fecha: {self.fecha}'
     class Meta:
         managed = False
         db_table = 'historial'
@@ -122,10 +122,10 @@ class Imagen(models.Model):
     idimagen = models.AutoField(primary_key=True)
     fechahoraimg = models.DateTimeField(default=timezone.now)
     encabezado = models.CharField(max_length=55, blank=True, null=True)
-    imagen = models.TextField(blank=True, null=True)
+    imagen = models.CharField(max_length=120, blank=True, null=True)
     postforo_idpostforo = models.ForeignKey('Postforo', models.DO_NOTHING, db_column='postforo_idpostforo')
     registrarseforo_idregistroforo = models.ForeignKey('Registrarseforo', models.DO_NOTHING, db_column='registrarseforo_idregistroforo')
-
+    
     def __str__(self):
         return f'Id: {self.idimagen} Encabezado: {self.encabezado}'
 
@@ -152,7 +152,7 @@ class Informacioncafe(models.Model):
 class Insecticidas(models.Model):
     idinsecticida = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=45)
-    imagen = models.TextField()
+    imagen = models.CharField(max_length=120)
     ingredientes = models.TextField(blank=True, null=True)
     descripcion = models.TextField()
     beneficios = models.TextField()
@@ -231,7 +231,7 @@ class Perdidas(models.Model):
     class Meta:
         managed = False
         db_table = 'perdidas'
-        
+
 #esto guarda la imagen que subimos, en la carpeta usuario, crea una carpeta con el nombre del usuario
 #y dentro la imagen que subio de su perfil
 
@@ -246,18 +246,19 @@ def directorio_user_path_perfil(instance, filename):
     return nombre_imagen
 #upload_to=directorio_user_path_perfil,
 
-
 class Perfilforo(models.Model):
     idperfilforo = models.AutoField(primary_key=True)
     fnacimiento = models.DateField(blank=True, null=True)
     intereses = models.TextField(blank=True, null=True)
-    fotoperfil = models.ImageField(default='logocoffee.png')
+    fotoperfil = models.ImageField(default='logocoffee.png', upload_to=directorio_user_path_perfil)
     registrarseforo_idregistroforo = models.ForeignKey('Registrarseforo', models.DO_NOTHING, db_column='registrarseforo_idregistroforo')
-
+    
     def __str__(self):
-        return f'Perfil de {self.registrarseforo_idregistroforo}'
+        return f'{self.fotoperfil} Perfil de {self.registrarseforo_idregistroforo}'
+    
 
     class Meta:
+        ordering = ['-registrarseforo_idregistroforo']
         managed = False
         db_table = 'perfilforo'
 
@@ -278,7 +279,7 @@ class Persona(models.Model):
     nombre2 = models.CharField(max_length=45, blank=True, null=True)
     apellido1 = models.CharField(max_length=45)
     apellido2 = models.CharField(max_length=45, blank=True, null=True)
-    correo = models.EmailField(max_length=45)
+    correo = models.CharField(max_length=45)
     telefono = models.CharField(max_length=12)
     direccion = models.CharField(max_length=45)
     fechanacimiento = models.DateField()
@@ -382,8 +383,20 @@ class Recomendacionplaga(models.Model):
 class Registrarseforo(models.Model):
     idregistroforo = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=45)
-    correo = models.EmailField(max_length=45)
+    correo = models.CharField(max_length=45,  unique= True)
+    password = models.CharField(max_length=120)
+    is_active = models.BooleanField(default=True)
     foro_idforo = models.ForeignKey(Foro, models.DO_NOTHING, db_column='foro_idforo')
+    
+    # se sobreescribe la funcion "save" para encriptar la contraseña antes de que sea guardada en la base de datos
+    def save(self, *args, **kwargs):
+        self.password = make_password(self.password)
+        super(Registrarseforo, self).save(*args, **kwargs)
+        
+        
+    #Este metodo es para validar que la contraseña sea igual a la contrasea almab+cenada en la base de datos
+    def check_password(self, raw_password):
+        return auth_check_password(raw_password, self.password)
     
     def __str__(self):
         return f'{self.nombre}'
@@ -446,6 +459,24 @@ class Tgastos(models.Model):
     class Meta:
         managed = False
         db_table = 'tgastos'
+
+
+class Timestamps(models.Model):
+    create_time = models.DateTimeField(blank=True, null=True)
+    update_time = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'timestamps'
+
+
+class Timestamps1(models.Model):
+    create_time = models.DateTimeField(blank=True, null=True)
+    update_time = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'timestamps_1'
 
 
 class Tinsecticida(models.Model):
@@ -573,7 +604,7 @@ class Valorperdida(models.Model):
 class Variedad(models.Model):
     idvariedad = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=45)
-    imagen = models.TextField()
+    imagen = models.CharField(max_length=120)
     descripcion = models.TextField(blank=True, null=True)
 
     class Meta:
@@ -598,3 +629,22 @@ class Vistas(models.Model):
     class Meta:
         managed = False
         db_table = 'vistas'
+        
+        
+opciones_consultas = [
+    [0, "consulta"],
+    [1, "reclamo"],
+    [2, "sugerencias"],
+    [3, "felicitaciones"]
+]
+
+class Contacto(models.Model):
+    nombre = models.CharField(max_length=50)
+    correo = models.EmailField()
+    tipo_consulta = models.IntegerField(choices=opciones_consultas)
+    mensaje = models.TextField()
+    aviso = models.BooleanField()
+
+
+    def __str__(self):
+        return self.nombre

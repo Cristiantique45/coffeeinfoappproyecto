@@ -20,7 +20,15 @@
       <!-- Start Page Header -->
       <div id="page_header">
         <h1>Slave to the Game</h1>
-        <h3>Online Gaming Community</h3>
+        <h3>{{ user.username | upper }}</h3>
+        <!--Barra de busqueda-->
+          <form  method="GET" action="{% url 'modulo1:leerfr' %}">
+            <div class="input-box">
+              <i class="uil uil search"></i>
+            <input type="text"  placeholder="Buscar..." value="{{ request.GET.buscar }}" name="buscar">
+            <button type="submit" class="boton">Buscar</button>
+            </div>
+          </form>
       </div>
       <!-- End of Page Header -->
       <!-- Start of Main Navigation Menu -->
@@ -34,17 +42,13 @@
           <li id="mainnav_06"><a href="#">Servers</a></li>
           <li id="mainnav_07"><a href="#">Sponsors</a></li>
           <li id="mainnav_09"><a href="{% url 'modulo1:leerfr' %}">Forum</a></li>
-          <!--{% if not registrarseforo_idregistroforo.is_authenticated %}-->
-          <!--<a href="{% url 'modulo1:account_login' %}">-->
-            <li id="mainnav_08"><a href="{% url 'modulo1:loginforo' %}">Login</a></li>
-          <!--</a>-->
-          <!--<a href="{% url 'modulo1:account_signup' %}">-->
-            <li id="mainnav_10"><a href="{% url 'modulo1:crearrefo' %}">Registrarse</a></li>
-          <!--</a>-->
-           <!--{% else %}-->
+
+            <li id="mainnav_08"><a href="{% url 'login' %}">Login</a></li>
+
+            <li id="mainnav_10"><a href="{% url 'register_usuario' %}">Registrarse</a></li>
+
             <li id="mainnav_07"><a href="{% url 'modulo1:logoutforo' %}">Logout</a></li>
 
-          <!--{% endif %}-->
           <li id="mainnav_10"><a href="#">Admin</a></li>
           <li id="mainnav_11"><a href="#">Members</a></li>
         </ul>

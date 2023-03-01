@@ -70,6 +70,7 @@ SITE_ID = 1
 
 #con esto especificamos que al hacer login funcione
 AUTHENTICATION_BACKENDS = [
+    'modulo1.backends.RegistrarseForoBackend',
     
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
@@ -80,6 +81,7 @@ AUTHENTICATION_BACKENDS = [
 
 
 MIDDLEWARE = [
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -124,6 +126,8 @@ DATABASES = {
         'HOST': '127.0.0.1',
     }
 }
+
+
 #algoritmo para encriptar contraseñas, tener contraseñas bien seguras
 #PASSWORD_HASHERS = [
     #"django.contrib.auth.hashers.Argon2PasswordHasher"
@@ -156,7 +160,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
 #Cda vez que se logue lo direccione
-LOGIN_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = 'principal'
 LANGUAGE_CODE = 'es-es'
 
 TIME_ZONE = 'UTC'

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from modulo1.models import *
+from .models import Contacto
 
 # Register your models here.
 
@@ -53,4 +54,8 @@ admin.site.register(Valorperdida)
 admin.site.register(Variedad)
 admin.site.register(Variedadgenetica)
 admin.site.register(Vistas)
+admin.site.register(Contacto)
+
+
+
 

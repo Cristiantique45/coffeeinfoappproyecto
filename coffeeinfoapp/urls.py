@@ -18,6 +18,7 @@ from django.urls import path, include
 from modulo1.views import *
 from django.contrib.auth.views import LoginView, LogoutView #password_reset, password_reset_done, password_reset_cofirm, password_reset_complete
 from django.conf import settings
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 
 urlpatterns = [
@@ -29,13 +30,17 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('modulo1/',include(('modulo1.urls','modulo1'))),
+    
     path('home/', Home, name= 'index'),
 
+    path('contacto/', contacto, name= 'contacto'),
+
+    #path('principal/',views.principal, name='principal.html'),#
+    
     #----------------------------------registro-----------------------------------------------
-    path('register/', registro, name="registro"),
 
     
-    #path('register/', registro_usuario, name='register_usuario'),
+    path('register/', registro_usuario, name='register_usuario'),
     
     #----------------------------------------recuperar contraseña--------------------------------
     #path(r'^reset/password_reset', password_reset, {'template_name':'registration/password_reset_form.html',
@@ -49,4 +54,5 @@ urlpatterns = [
     #path(r'^reset/done', password_reset_complete, {'template_name':'registration/password_reset_complete.html'},
         #name='password_reset_complete'),
 ]
+urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

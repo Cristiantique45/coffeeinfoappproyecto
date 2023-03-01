@@ -1,21 +1,25 @@
-from django.shortcuts import render
-from django.urls import reverse
-from django.views.generic import ListView, DetailView 
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
 #importo el modelo de la base de datos de models.py
 from .models import *
 # Habilitamos el uso de mensajes en Django
 from django.contrib import messages 
+from django.urls import reverse
+from django.views.generic import ListView, DetailView 
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
+#from django.contrib.auth.views import Loginview
+from django.shortcuts import render, redirect
+from django.contrib.auth import   login, logout, authenticate
+from django.db.models import Q, F, Value
  
 # Habilitamos los mensajes para class-based views 
 from django.contrib.messages.views import SuccessMessageMixin 
  
 # Habilitamos los formularios en Django
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import request
 from django.http import HttpRequest
 from django.http import HttpResponse
+from .forms import ContactoForm, RegistrarseforoForm, MyAuthenticationForm
 
 
 
@@ -23,41 +27,100 @@ from django.http import HttpResponse
 
 # Create your views here.
 def Home(request):
-    return render(request, "index.html")
+    return render(request, "principal.html")
 
 def Login(request):
     return render (request, "login.html")
 
+def contacto(request):
+    data = {
+        'form': ContactoForm()
+    }
+    if request.method == 'POST':
+        formulario = ContactoForm(data=request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            data["mensaje"] = "contacto guardado"
+        else:
+                data["form"] = formulario
 
+    return render(request, 'app/contacto.html', data)
+#-----------------------------------------------------------------------------------------------------------------------------------------------#
+def custom_login(request):
+    if request.user.is_authenticated:
+        return redirect('principal.html') # Si el usuario ya ha iniciado sesión, redirige a la nueva página personalizada
+
+    # Si el usuario no ha iniciado sesión, muestra la página de inicio de sesión predeterminada de Django
+    else:
+        return LoginView.as_view(template_name='registration/login.html', extra_context={'next': '/principal.html/'})(request)
+
+
+def principal(request):
+    if request.user.is_authenticated:
+        return render(request, 'principal.html')
+    else:
+        return redirect('login')
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------------#
 #--------------------------------------------REGISTRO-------------------------------------------------#
 
-def registro(request):
-    return render(request, 'registration/register.html')
+def registro_usuario(request):
 
-#def registro_usuario(request):
-
-    #if request.method == 'POST':
-        #formulario = CustomUserForm(request.POST)
-        #if formulario.is_valid():
-           # formulario.save()
+    if request.method == 'POST':
+        formulario = CustomUserForm(request.POST)
+        if formulario.is_valid():
+            formulario.save()
             #autentiar el usuario y regresar al inicio
-            #username = formulario.cleaned_data['username']
-            #password = formulario.cleaned_data['password']
-            #user = authenticate(username=username, password=password)
-            #login(request, user)
-            #return redirect(to='home')
+            username = formulario.cleaned_data['username']
+            password = formulario.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect(to='home')
 
-    #return render(request, 'registration/register.html')    
+    return render(request, 'registration/register.html')    
 
 #-----------------------------------------------------------------------------------------------------#
 
 def foro_login(request):
-    return render (request, "login_foro.html")
+    if request.method == "POST":
+        form = MyAuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            #vamos a guardar en una varible usuario lo que el usuario ingrese en el campo "username"
+            usuario = form.cleaned_data.get('Enter_username')
+            contraseña = form.cleaned_data.get('Enter_password')
+            
+            try:
+                registrado = Registrarseforo.objects.get(nombre=usuario)
+            except Registrarseforo.DoesNotExist:
+                registrado = None
+                
+            user = authenticate(request, usuario=registrado.nombre, password=contraseña)
+            #si tiene algun valor
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"Estas logeado como {usuario}")
+                 # Agregue un registro para depurar
+                Logger.debug(f"Usuario {usuario} autenticado y logueado")
+                return redirect('modulo1:leercf')
+            else:
+                messages.error(request, "usuario o contraseña equivocada")
+        else:
+            messages.error(request, "usuario o contraseña equivocada")         
+    
+    form = MyAuthenticationForm
+    return render (request, "login_foro.html", {"form": form})
+
+
 
 def foro_logout(request):
-    return render (request, "logout_foro.html")
+    logout(request)
+    #return render (request, "logout_foro.html")
+    messages.info(request, "Saliste exitosamente")
+    return redirect("modulo1:leercf")
 
  
+
+     
     # librerias del crud
 
     #----------------------------ainseticida---------------------------------------------------------------------------------------------------------#
@@ -105,8 +168,17 @@ class AinsecticidaEliminar(SuccessMessageMixin, DeleteView):
         
 class ListadoCategoriaforo(ListView):
     model = Categoriaforo
+    template_name = "crud\categoriaforo\index.html"
+    context_object_name = 'categoria'
     
-    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        buscar = self.request.GET.get('buscar')
+        if buscar:
+            queryset = queryset.filter(Q(nombre__icontains=buscar) | Q(descripcion__icontains=buscar))
+        return queryset
+        
+
 class CategoriaforoCrear(SuccessMessageMixin, CreateView):
     model =Categoriaforo
     form = Categoriaforo
@@ -142,6 +214,29 @@ class CategoriaforoEliminar(SuccessMessageMixin, DeleteView):
     #------------------------------------------COMENTARIO-----------------------------------------------------------------------------------#
 class ListadoComentario(ListView):
     model = Comentario
+    context_object_name = 'comentarios'
+    
+    #funciones para traer la foto de perfil de acuerdo al comentario
+    
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = qs.filter(perfilforo_idperfilforo__fotoperfil__isnull=False)        
+        return qs
+    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+    
+    #--------------------------funcion para hacer una busqueda------------------------------------------
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        buscar = self.request.GET.get('buscar')
+        if buscar:
+            queryset = queryset.filter(Q (comentario__icontains=buscar))
+        return queryset
+
+    
     
     
 class ComentarioCrear(SuccessMessageMixin, CreateView):
@@ -255,6 +350,15 @@ class EnfermedadesEliminar(SuccessMessageMixin, DeleteView):
 
 class ListadoForo(ListView):
     model = Foro
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        buscar = self.request.GET.get('buscar')
+        if buscar:
+            queryset = queryset.filter(Q(nombre__icontains=buscar))
+        return queryset
+    
+    
     
     
 class ForoCrear(SuccessMessageMixin, CreateView):
@@ -1199,24 +1303,45 @@ class ListadoRegistrarseforo(ListView):
     model = Registrarseforo
     
     
-class RegistrarseforoCrear(SuccessMessageMixin, CreateView):
+class RegistrarseforoCrear(FormView):
     model = Registrarseforo
-    form = Registrarseforo
+    form_class= RegistrarseforoForm
+    template_name = 'crud/registrarseforo/crear.html'
     fields = "__all__"
+    success_url = ('modulo1:leerco')
     
-    def form_valido(self, Registrarseforo):
-        if self.request.method == 'POST':
-            registro = Registrarseforo(self.request.POST)
-            if registro.is_valid():
-                nombre = registro.cleaned_data['nombre']
-                messages.success(request, f'Usuario {nombre} creado')
-
+    def form_valid(self, form):
+        usuario = form.save()
+        nombre = form.cleaned_data['nombre']
+        correo = form.cleaned_data['correo']
+        password = form.cleaned_data['password']
+        usuario = authenticate(self.request,nombre=nombre, correo=correo, password=password)
+        if usuario is not None:
+            foro_login(self.request, usuario, backend='django.contrib.auth.backends.ModelBackend')
+            messages.success(self.request, 'Bienvenido!')
+            return super().form_valid(form)
         else:
-            registro = Registrarseforo()
-        
+            messages.error(self.request, 'Usuario o contraseña incorrectos.')
+            return self.form_invalid(form)
+    
+    def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}")
+        return super().form_invalid(form)
+    
+               
+             
     def get_success_url(self):        
-        return reverse('modulo1:leerco') # Redireccionamos a la vista principal 'leer'
-
+        return redirect('modulo1:leerco') # Redireccionamos a la vista principal 'leer'
+            
+        
+                
+    
+    form = Registrarseforo
+    def get_success_url(self):        
+        return reverse('modulo1:leerco') # Redireccionamos a la vista principal 'leer'    
+                
 class RegistrarseforoDetalle (DetailView):
     model = Registrarseforo
 
@@ -1364,6 +1489,13 @@ class RfinancieroloteEliminar(SuccessMessageMixin, DeleteView):
 
 class ListadoTemaforo(ListView):
     model = Temaforo
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        buscar = self.request.GET.get('buscar')
+        if buscar:
+            queryset = queryset.filter(nombre__icontains=buscar)
+        return queryset
     
     
 class TemaforoCrear(SuccessMessageMixin, CreateView):
@@ -2022,7 +2154,3 @@ class VistasEliminar(SuccessMessageMixin, DeleteView):
         success_message = 'Categoria Eliminado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
         messages.success (self.request, (success_message))       
         return reverse('modulo1:leervi') # Redireccionamos a la vista principal 'leer'
-    
-#------------------------------------------------REGISTRO-----------------------------------------------------
-
-    

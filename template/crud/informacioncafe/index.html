@@ -9,6 +9,8 @@
         <title>Información café</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="/static/css/styles.css/" rel="stylesheet" />
+        <link href="/static/css/biblioteca.css" rel="stylesheet" />
+        <link href="/static/css/biblioteca2.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
 
 
@@ -24,83 +26,57 @@
         </ul>
         {% endif %}
     </head>
-    <body class="sb-nav-fixed">
-        {% include "nav.html" %}
+    <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
+    <body data-home-page="Casa.html" data-home-page-title="Casa" class="u-body u-xl-mode" data-lang="es"><header class="u-clearfix u-header u-header" id="sec-20d2"><div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#!">Start Bootstrap</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">INICIO</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#!">CONTACTENOS</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">NUESTROS SERVICIOS</a>
+           
             </div>
-            <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4">Información del café</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="index.html">Parametros</a></li>
-                            <li class="breadcrumb-item active">Información del café</li>
-                        </ol>
-                        
-                            {# JS y jQuery Bootstrap #}
-                            {% bootstrap_javascript jquery='full' %} 
-                            <div align="left" class="btn_crear mb-3">
-                            <a href="crear" type="button" class="btn btn-primary">Crear</a>
-                        </div>
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                Información del café
-                            </div>
-                            <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>Código de Información</th>
-                                            <th>Tratamiento</th>    
-                                            <th>Plagas</th>
-                                            <th>Enfermedades</th>
-                                            <th>Insecticida</th>
-                                            <th>Variedad</th>                                       
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Código de Información</th>
-                                            <th>Tratamiento</th>    
-                                            <th>Plagas</th>
-                                            <th>Enfermedades</th>
-                                            <th>Insecticida</th>
-                                            <th>Variedad</th>   
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        {% for Informacioncafe in object_list %}
-                                            <tr>
-                                                <td>{{ Informacioncafe.idinformacioncafe }}</td>
-                                                <td>{{ Informacioncafe.tratamiento_idtratamiento  }}</td>
-                                                <td>{{ Informacioncafe.plagas_idplagas  }}</td>
-                                                <td>{{ Informacioncafe.enfermedades_idenfermedades  }}</td>
-                                                <td>{{ Informacioncafe.insecticidas_idinsecticida  }}</td>
-                                                <td>{{ Informacioncafe.variedad_idvariedad  }}</td>
-                                                <td>
-                                                    <form method="POST" action="eliminar/{{Informacioncafe.idinformacioncafe}}">
-                                                        {% csrf_token %}
-                                                        <div class="btn-group">
-                      
-                                                            <!-- Creamos 3 botones que son ver, Editar y Eliminar, nos sirven para gestionar nuestros registros o postres -->
-                                                            <a href="detalle/{{Informacioncafe.idinformacioncafe}}" title="Ver" type="button" class="btn btn-success">Ver </a>
-                                                            <a href="editar/{{Informacioncafe.idinformacioncafe}}" title="Editar" type="button" class="btn btn-primary">Editar </a>
-                                                            <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                                                              Eliminar
-                                                            </button>
-                                                        </div>
-                                                    </form    
-                                                </td>     
-                                            </tr>
-                                      
-                                        {% endfor %}
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </main>
+        </div>
+    </nav>
+   
+    <section class="u-align-center u-clearfix u-valign-top-sm u-valign-top-xs u-section-1" id="carousel_5999">
+      <div class="u-expanded-width u-grey-10 u-shape u-shape-rectangle u-shape-1"></div>
+      <h5 class="u-custom-font u-font-montserrat u-text u-text-1">BIBLIOTECA INFORMATIVA</h5>
+      <h1 class="u-text u-text-2"> Bienvenido a nuestrass seccion de biblioteca donde encontraras diversa informacion del cultivo</h1>
+      <div class="u-list u-list-1">
+        <div class="u-repeater u-repeater-1">
+          <div class="u-container-style u-list-item u-repeater-item u-white u-list-item-1">
+            <div class="u-container-layout u-similar-container u-container-layout-1">
+              <img src="https://t2.uc.ltmcdn.com/es/posts/7/5/8/como_sembrar_cafe_49857_600.jpg"alt="" class="u-bottom-left-radius-20 u-expanded-width u-image u-image-round u-top-right-radius-20 u-image-1" data-image-width="800" data-image-height="800" src="images/bn.jpg">
+              <h3 class="u-text u-text-default u-text-3"> COMO INICAR UN CULTIVO</h3>
+              <p class="u-text u-text-4">Aqui te explicaremos como se inicia un cultivo , te explicara principalmente como sembrar, como se debe fertilizar o abonar para su progreso,te daremos el paso a paso para que puedas iniciar con tu cultivo</p>
+              <a href="iniciarcultivo.html" class="u-active-none u-border-2 u-border-active-black u-border-hover-black u-border-palette-2-base u-btn u-button-style u-hover-none u-none u-text-body-color u-btn-1">MAS DETALLES</a>
+            </div>
+          </div>
+          <div class="u-container-style u-list-item u-repeater-item u-white u-list-item-2">
+            <div class="u-container-layout u-similar-container u-container-layout-2">
+              <img src="http://www.2000agro.com.mx/wp-content/uploads/plantas-veracruz.jpg"alt="" class="u-bottom-left-radius-20 u-expanded-width u-image u-image-round u-top-right-radius-20 u-image-2" data-image-width="1200" data-image-height="1002" src="images/kj.jpg">
+              <h3 class="u-text u-text-default u-text-5">VARIEDADES</h3>
+              <p class="u-text u-text-6">La seccion de variedades esta disponible para que tengas presente las variedades de cafe que hay actualmente y las que estan se pueden estar prensentando actualmente</p>
+              <a href="variedades.html" class="u-active-none u-border-2 u-border-active-black u-border-hover-black u-border-palette-2-base u-btn u-button-style u-hover-none u-none u-text-body-color u-btn-2">MAS DETALLES</a>
+            </div>
+          </div>
+          <div class="u-container-style u-list-item u-repeater-item u-white u-list-item-3">
+            <div class="u-container-layout u-similar-container u-container-layout-3">
+              <img src="https://perfectdailygrind.com/es/wp-content/uploads/sites/2/2019/11/hoja-de-cafe.png"alt="" class="u-bottom-left-radius-20 u-expanded-width u-image u-image-round u-top-right-radius-20 u-image-3" data-image-width="1080" data-image-height="1080" src="images/nn.jpg">
+              <h3 class="u-text u-text-default u-text-7">ENFERMEDADES QUE PUEDE PRESENTAR TU CULTIVO</h3>
+              <p class="u-text u-text-8">En este punto te informaras acerca de todas las enfermedaddes que puede presentar tu cultivo de cafe, te exxplicara que afectaciones y como actua la enfermedad que se te puede estar presentando</p>
+              <a href="enfermedades.html" class="u-active-none u-border-2 u-border-active-black u-border-hover-black u-border-palette-2-base u-btn u-button-style u-hover-none u-none u-text-body-color u-btn-3">MAS DETALLES</a>
+            </div>
+          </div>
+       
+        </div>
+      </div>
+           
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">

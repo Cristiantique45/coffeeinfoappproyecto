@@ -1,66 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Registrarse</title>
-        <link href="css/styles.css" rel="stylesheet"/>
-        <link href="/static/css/styles.css" rel="stylesheet" />
-        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-    </head>
-        
-    <body>
-        <form  action="" method="POST" aling=center class="formulario-2">
-            {% csrf_token %}
 
-            <h1>Registrate</h1>
-             <div class="contenedor-1">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Registrarse</title>
+    <link href="css/styles.css" rel="stylesheet" />
+    <link href="/static/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+</head>
 
-                <div class="input-contenedor">
-                    <i class="fa-solid fa-user icon"></i>
-                    <input type="text" placeholder="Nombre Completo">
-                </div>
+<body>
+    {% load crispy_forms_tags %}
+    <form method="POST" aling=center action="" class="formulario-2">
+        <h1>Registrate</h1>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="alert alert-{{ message.tags }}" {% endif%}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
 
-                <div class="input-contenedor">
-                    <i class="fa-solid fa-envelope icon"></i>
-                    <input type="text" placeholder="Correo Electronico">
-                </div>
+        {% csrf_token %}
 
-                <div class="input-contenedor">
-                    <i class="fa-sharp fa-solid fa-key icon"></i>
-                    <input type="password" placeholder="Contraseña">
-                </div>
+        {{ form | crispy }}
 
-                <div class="input-contenedor">
-                    <i class="fa-sharp fa-solid fa-key icon"></i>
-                    <input type="password" placeholder="Confirmar Contraseña">
-                </div>
-                <input type="submit" value="Registrate" class="button">
-                <p>Al registrarte, aceptas nuestros terminos y condiciones de uso y politica de 
-                    privacidad.</p>
-                    <p>¿Ya tienes una cuenta?<a class="link" href="login.html">Iniciar Sesion</a></p>
 
-             </div>
-        </form>
-            <div id="layoutAuthentication_footer">
-                <footer>
-                    <div>
-                        <div>
-                            <div>Copyright &copy; Your Website 2022</div>
-                            <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms &amp; Conditions</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            </div>
+        <button type="submit" class="butt-ingresar" class="login-ingresar" class="login100-form-btn"> Registrarse</button>
+        <!--<input type="submit" value="Registrate" class="button">-->
+        <div>
+            <p>Al registrarte, aceptas nuestros <a href="#">terminos y condiciones</a>  de uso y politica de privacidad.</p>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="js/scripts.js"></script>
-    </body>
+        <div>
+            <p>¿Ya tienes una cuenta?but<a href="{% url 'login' %}">Iniciar Sesión</a></p>
+        </div>    
+    </form>
+    <div id="layoutAuthentication_footer">
+        <footer>
+            <div>
+                <div>
+                    <div>Copyright &copy; Your Website 2022</div>
+                    <div>
+                        <a href="#">Privacy Policy</a>
+                        &middot;
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+</body>
+
 </html>

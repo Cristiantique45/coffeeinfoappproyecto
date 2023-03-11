@@ -1,22 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/../static/css/css.css">
+    <title>Contactanos</title>
+</head>
+<body>
+    
+</body>
+</html>
+    {% block contenido %}
 
-
-{% block contenido %}
-
-<h2>Contactanos!</h2>
-<form action="" class="formulario_contacto" method="post">
+<form action="" method="post">
+    <h2>CONTACTANOS</h2>
 
     {% csrf_token %}
 
+    <label for="id_nombre">Nombre</label>
+    <input type="text" name="nombre" maxlength="50" required id="id_nombre" placeholder="Nombre Completo">
     
-    {{ form }}
+    <label for="id_correo">Correo</label>
+    <input type="email" name="correo" maxlength="254" required id="id_correo" placeholder="Correo Electronico">
     
-    <br>
-    <button type="submit" id="btnEnviar" class="button">Enviar</button>
+    <label for="id_tipo_consulta">Tipo consulta</label>
+    <select name="tipo_consulta" required id="id_tipo_consulta">
+  <option value="" selected>---------</option>
+
+  <option value="0">consulta</option>
+
+  <option value="1">reclamo</option>
+
+  <option value="2">sugerencias</option>
+
+  <option value="3">felicitaciones</option>
+
+</select>
+    
+    <li>
+    
+    <label for="id_mensaje">Mensaje</label>
+    <textarea name="mensaje" cols="40" rows="10" required id="id_mensaje" placeholder="Escribe aqui tu mensaje">
+</textarea>
+    
+    </li>
+
+    <label for="id_aviso">Aviso</label>
+    <input type="checkbox" name="aviso" id="id_aviso">
+    
+    <!--{{ form.as_ul}}-->
+    
+    <input type="submit" id="btnEnviar">
 
 </form>
 
-<table id="tablacontactos">
-
-</table>
 
 {% endblock %}
+    
+
+

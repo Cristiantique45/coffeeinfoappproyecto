@@ -1,0 +1,52 @@
+/*body {
+    background-image: url(https://humanidades.com/wp-content/uploads/2018/09/cafe-2-e1578772193199.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    margin: 0;
+    font-family: 'Courier New', Courier, monospace;
+}
+form {
+    width: 540px;
+    margin: auto;
+    background: rgba(0,0,0,0.4);
+    padding: 10px 20px;
+    box-sizing: border-box;
+    margin-top: 30px;
+    border-radius: 10px;
+}
+h2 {
+    color: #fff;
+    text-align: center;
+    margin: 0;
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+.int-username, textarea {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 7px;
+    box-sizing: border-box;
+    font-size: 17px;
+    border: none;
+}
+textarea {
+    min-height: 100px;
+    max-height: 200px;
+    max-width: 100px;
+}
+#boton {
+    background: #31384a;
+    color: #fff;
+    padding: 20px;
+}
+#boton:hover {
+    cursor: pointer;
+}
+@media (max-width:480px) {
+    form{
+        width: 100px;
+    }
+}*/
+body {
+    background-image: url(https://humanidades.com/wp-content/uploads/2018/09/cafe-2-e1578772193199.jpg);
+}

@@ -21,7 +21,7 @@
       <!-- Start Page Header -->
       <div id="page_header">
         <h1>Slave to the Gam</h1>
-        <h3>{{ user.username | upper }} ¡Bienvenido! al Foro</h3>
+        <h3 class="bienvenida">¡Bienvenido! al Foro, {{ user.username | lower }}</h3>
         <!--Barra de busqueda-->
         <form method="GET" action="{% url 'modulo1:leercf' %}">
           <div class="input-box">
@@ -35,16 +35,25 @@
       <!-- Start of Main Navigation Menu -->
       <div id="mainnav">
         <ul>
+          {% if request.user.is_authenticated %}
           <li id="mainnav_01"><a href="{% url 'index' %}">Home</a></li>
-          <li id="mainnav_02"><a href="{% url 'modulo1:leerpef' %}">Perfil</a></li>
-          <li id="mainnav_03"><a href="#">About Us</a></li>
-          <li id="mainnav_04"><a href="#">Matches</a></li>
+         <li id="mainnav_03"><a href="#">Acerca de</a></li>
+          <li id="mainnav_04"><a href="{% url 'contacto' %}">Contacto</a></li>
+          <li id="mainnav_05"><a href="#">Downloads</a></li>
+          <li id="mainnav_06"><a href="#">Servers</a></li>
+          <li id="mainnav_07"><a href="{% url 'modulo1:leerfr' %}">Foro</a></li>
+          <li id="mainnav_10"><a href="{% url 'logout' %}">Salir</a></li>
+          <li class="nombre-usuario"><a href="{% url 'modulo1:leerpef' %}">{{ user.username | lower }}</a></li>
+          {% else %}
+          <li id="mainnav_01"><a href="{% url 'index' %}">Home</a></li>
+          <li id="mainnav_03"><a href="#">Acerca de </a></li>
+          <li id="mainnav_04"><a href="{% url 'contacto' %}">Contacto</a></li>
           <li id="mainnav_05"><a href="#">Downloads</a></li>
           <li id="mainnav_06"><a href="#">Servers</a></li>
           <li id="mainnav_07"><a href="{% url 'modulo1:leerfr' %}">Foro</a></li>
           <li id="mainnav_08"><a href="{% url 'login' %}">Login</a></li>
-          <li id="mainnav_10"><a href="{% url 'modulo1:logoutforo' %}">Salir</a></li>
-          <li id="mainnav_09"><a href="{% url 'register_usuario' %}">Registrarse</a></li>
+          <li id="mainnav_09"><a href="{% url 'registrarse' %}">Registrarse</a></li>
+          {% endif %}
         </ul>
         <div class="clearthis">&nbsp;</div>
       </div>
@@ -124,12 +133,7 @@
     <div id="leftcolumn">
       <!-- Start of Recent Record -->
       <div id="recentrecord">
-        <h2><span>Recent Record</span></h2>
-        <ul>
-          <li>TWL : 105 - 43 - 6</li>
-          <li>OGL : 101 - 35 - 16</li>
-          <li>TWL : 105 - 43 - 6</li>
-        </ul>
+        <a href="{% url 'index' %}"><img class="logocoffee" src="{% static '/assets/img/logocoffee.png' %}" alt="Descripción de la imagen"></a>
         <div class="clearthis">&nbsp;</div>
       </div>
       <!-- End of Recent Record -->

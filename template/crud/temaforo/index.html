@@ -22,7 +22,13 @@
       <!-- Start Page Header -->
       <div id="page_header">
         <h1>Slave to the Gam</h1>
-        <h3>{{ user.username | upper }}</h3>
+        {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="alert alert-{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
         <!--Barra de busqueda-->
           <form  method="GET" action="{% url 'modulo1:leertefo' %}">
             <div class="input-box">
@@ -36,19 +42,25 @@
       <!-- Start of Main Navigation Menu -->
       <div id="mainnav">
         <ul>
+          {% if request.user.is_authenticated %}
           <li id="mainnav_01"><a href="{% url 'index' %}">Home</a></li>
-          <li id="mainnav_02"><a href="{% url 'modulo1:leerpef' %}">Perfil</a></li>
-          <li id="mainnav_03"><a href="#">About Us</a></li>
-          <li id="mainnav_04"><a href="#">Matches</a></li>
+          <li id="mainnav_03"><a href="#">Acerca de</a></li>
+          <li id="mainnav_04"><a href="{% url 'contacto' %}">contacto</a></li>
           <li id="mainnav_05"><a href="#">Downloads</a></li>
           <li id="mainnav_06"><a href="#">Servers</a></li>
-          <li id="mainnav_07"><a href="#">Sponsors</a></li>
-          <li id="mainnav_09"><a href="{% url 'modulo1:leerfr' %}">Forum</a></li>
+          <li id="mainnav_07"><a href="{% url 'modulo1:leerfr' %}">Foro</a></li>
+          <li id="mainnav_10"><a href="{% url 'logout' %}">Salir</a></li>
+          <li class="nombre-usuario"><a href="{% url 'modulo1:leerpef' %}">{{ user.username | lower }}</a></li>
+          {% else %}
+          <li id="mainnav_01"><a href="{% url 'index' %}">Home</a></li>
+          <li id="mainnav_03"><a href="#">Acerca de</a></li>
+          <li id="mainnav_04"><a href="{% url 'contacto' %}">Contacto</a></li>
+          <li id="mainnav_05"><a href="#">Downoads</a></li>
+          <li id="mainnav_06"><a href="#">Servers</a></li>
+          <li id="mainnav_07"><a href="{% url 'modulo1:leerfr' %}">Foro</a></li>
           <li id="mainnav_08"><a href="{% url 'login' %}">Login</a></li>
-          <li id="mainnav_10"><a href="{% url 'register_usuario' %}">Registrarse</a></li>
-          <li id="mainnav_07"><a href="{% url 'modulo1:logoutforo' %}">Logout</a></li>
-          <li id="mainnav_10"><a href="#">Admin</a></li>
-          <li id="mainnav_11"><a href="#">Members</a></li>
+          <li id="mainnav_09"><a href="{% url 'registrarse' %}">Registrarse</a></li>
+          {% endif %}
         </ul>
         <div class="clearthis">&nbsp;</div>
       </div>
@@ -61,9 +73,37 @@
             <div class="newsbox_header">
               <!-- News Title -->
               <h2>Temas</h2>
+
+              <!--............-paginancion.........................-->
+
+              {% if is_paginated %}
+                <div >
+                  <ul class="pagination">                      
+                    {% for i in paginator.page_range %}                    
+                        <li class="page-item {% if page_obj.number == i %} active {% endif %} ">
+                          <a href="?page= {{ i }}" class="page-link">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+                    
+
+                    <!--permite conocer si existe una pagina siguiente a la que no escontramos -->
+                    {% if page_obj.has_next %}
+                      <li class="page-item">
+                        <!--permite conocer la siguiente pagina-->
+                        <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a>
+                      </li>
+                    {%else %}
+                      <li class="page-item disabled">
+                        <!--permite conocer la siguiente pagina-->
+                        <a href="#" class="page-link">Next</a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                </div>
+              {% endif %}
               <div class="contenedor-button-foro">
                 <a href="crear" type="button" class="button-foro" > <img class="img-button-foro" src="https://cdn-icons-png.flaticon.com/512/61/61489.png"  alt="">Crear Tema</a>       
-            </div>
+              </div>
               <!-- News Date -->
               <div class="clearthis">&nbsp;</div>
             </div>
@@ -73,13 +113,15 @@
               {% for Temaforo in object_list %}
               <article>
                 <div class="container-article">
-                  <div>
-                    <i class="clock"></i>                  
-                    <div class="post"><a href="{% url 'modulo1:leerco' %}">{{Temaforo.nombre}}</div></a>
-                    <h2 class="username">
-                      <a href="#">@{{Comentario.registrarseforo_idregistroforo}} usuario</a>
-                  </h2>
-                  <strong>10/31/2005</strong>
+                  <div>                        
+                    <div class="post">
+                      <a href="{% url 'modulo1:leerco' %}">{{ Temaforo.nombre }}</a>
+                      <h2 class="username">
+                        <a href="#">@{{ Temaforo.usuario }}</a>
+                      </h2>
+                      <i class="clock"></i>
+                      <time data-time="#">{{ Temaforo.fecha|naturaltime }}</time>
+                    </div>                  
                   <br>
                     <a href="#">More...</a>
 
@@ -89,87 +131,10 @@
               {% endfor %}
             </div>
           </div>
-          <!-- End of News Box 1 -->
-          <!-- Start of News Box 2 -->
-          <div class="newsbox">
-            <div class="newsbox_header">
-              <!-- News Title -->
-              <h2>Nvidia Forceware 81.87 Beta Released</h2>
-              <!-- News Date -->
-              <strong>10/27/2005</strong>
-              <div class="clearthis">&nbsp;</div>
-            </div>
-            <div class="newsbox_content">
-              <!-- News Text -->
-              <p> Posted By: Drew </p>
-              <p> Nvidia have released their latest "unofficial official" graphics drivers - the 81.87 Beta Forceware.
-                The main difference between these and the recent 81.85 drivers is the addition of
-                optimizations/compatibility fixes for Call of Duty 2. <br />
-                <br />
-                http://www.nzone.com/object/nzone_downloads_winxp_2k_32bit_81.87.html
-              </p>
-            </div>
-          </div>
-          <!-- End of News Box 2 -->
-          <!-- Start of News Box 3 -->
-          <div class="newsbox">
-            <div class="newsbox_header">
-              <!-- News Title -->
-              <h2>Match Tonight</h2>
-              <!-- News Date -->
-              <strong>10/25/2005</strong>
-              <div class="clearthis">&nbsp;</div>
-            </div>
-            <div class="newsbox_content">
-              <!-- News Text -->
-              <p> Posted By: Drew </p>
-              <p> Opponent: 505 Parachute Infantry Regiment <br />
-                Server: S2tG #2 unless they post otherwise <br />
-                Map: CoD_UO_carentan <br />
-                Match Date: Wednesday October 26th @ 9:00 PM EST <br />
-                S2tG has allies first
-                Sign up on the calendar </p>
-            </div>
-          </div>
-          <!-- End of News Box 3 -->
           <!-- Start of News Box 4 -->
-          <div class="newsbox">
-            <div class="newsbox_header">
-              <!-- News Title -->
-              <h2>CoD2 Review @IGN</h2>
-              <!-- News Date -->
-              <strong>10/25/2005</strong>
-              <div class="clearthis">&nbsp;</div>
-            </div>
-            <div class="newsbox_content">
-              <!-- News Text -->
-              <p> Posted By: Randall </p>
-              <p> http://pc.ign.com/articles/661/661230p1.html <br />
-                <br />
-                8.5 out of 10 because of health management implemetation.
-              </p>
-            </div>
-          </div>
+          
           <!-- End of News Box 4 -->
           <!-- Start of News Box 5 -->
-          <div class="newsbox">
-            <div class="newsbox_header">
-              <!-- News Title -->
-              <h2>Match Tonight</h2>
-              <!-- News Date -->
-              <strong>10/22/2005</strong>
-              <div class="clearthis">&nbsp;</div>
-            </div>
-            <div class="newsbox_content">
-              <!-- News Text -->
-              <p> Posted By: Drew </p>
-              <p> Opponent: |Terror Squad| <br />
-                Server: S2tG #2 <br />
-                Map: arnhem <br />
-                Match Date: Saturday October 22th @ 9:30 PM EST <br />
-                S2tG has allies first </p>
-            </div>
-          </div>
           <!-- End of News Box 5 -->
         </div>
       </div>
@@ -215,12 +180,7 @@
     <div id="leftcolumn">
       <!-- Start of Recent Record -->
       <div id="recentrecord">
-        <h2><span>Recent Record</span></h2>
-        <ul>
-          <li>TWL : 105 - 43 - 6</li>
-          <li>OGL : 101 - 35 - 16</li>
-          <li>TWL : 105 - 43 - 6</li>
-        </ul>
+        <a href="{% url 'index' %}"><img class="logocoffee" src="{% static '/assets/img/logocoffee.png' %}" alt="Descripción de la imagen"></a>
         <div class="clearthis">&nbsp;</div>
       </div>
       <!-- End of Recent Record -->

@@ -21,11 +21,14 @@ from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 
+
 urlpatterns = [
     #------------------------------login---------------------------------#
+    
+    path('accounts/', include('django.contrib.auth.urls')),
 
-    path('', LoginView.as_view(template_name='login.html'), name="login"),
-    path('logout/', LogoutView.as_view(template_name='login.html'), name="logout"),
+    path('', Login_request, name="login"),
+    path('logout/', logout_request, name="logout"),
 
 
     path('admin/', admin.site.urls),
@@ -34,13 +37,11 @@ urlpatterns = [
     path('home/', Home, name= 'index'),
 
     path('contacto/', contacto, name= 'contacto'),
-
-    #path('principal/',views.principal, name='principal.html'),#
-    
+     
     #----------------------------------registro-----------------------------------------------
 
     
-    path('register/', registro_usuario, name='register_usuario'),
+    path('Registro/', registro, name='registrarse'),
     
     #----------------------------------------recuperar contraseña--------------------------------
     #path(r'^reset/password_reset', password_reset, {'template_name':'registration/password_reset_form.html',

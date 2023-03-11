@@ -1116,7 +1116,6 @@ body {
 }
 .formulario-2 {
   background: #fff;
-  margin-top: 150px;
   padding: 3px;
   width: 40%;
 
@@ -2612,7 +2611,9 @@ a:hover{
 }
 
 
-/*--------------------------------------------------------------------------------------------------------------------*/
+/*-------------------estilos para los mensajes que se prentan al usuario (login, registro)-----------------------------------------------------------------------*/
+
+
 
 
 /*-------------------------------------estilos.css para el foro-----------------------------------------------------*/
@@ -3342,8 +3343,33 @@ template {
 
 
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------estilos logocoffeee------------------------------------------------------------------*/
 
+.logocoffee{
+  width: 150px;
+  height: 150px;
+  margin-left: 40px;
+  margin-top: 10px;
+  
+}
+.etiqueta{
+  color: #000;
+}
+
+
+/*--------------------------------------------estilos nombre de usuario------------------------------------------------------------------*/
+
+.nombre-usuario{
+  background: #623421;
+  width: 80px;
+  padding: 4px;
+}
+.bienvenida{
+  color: #000000;
+  background: #fff;
+  width: 350px;
+  border-radius: 30px;
+}
 
 /*--------------------------------------------estilos para el foro  plantilla------------------------------------------------------------------*/
 
@@ -3358,9 +3384,9 @@ template {
 }
 
 a {
-	color: #fff;
+	color: #623421;
 	background-color: inherit;
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 a:hover {
@@ -3451,62 +3477,57 @@ input {
 	height: 21px;
 	background-repeat: no-repeat;
 	background-position: 0% 0%;
+  color: #fff;
+  text-decoration: none;
+  
 }
+
 
 li#mainnav_01 a {
 	margin-left: 10px;
 	width: 40px;
+
 }
 
 li#mainnav_02 a {
 	width: 52px;
-	background-image: url('images/headernav_02.jpg');
 }
 
 li#mainnav_03 a {
 	width: 69px;
-	background-image: url('images/headernav_03.jpg');
 }
 
 li#mainnav_04 a {
 	width: 62px;
-	background-image: url('images/headernav_04.jpg');
 }
 
 li#mainnav_05 a {
 	width: 83px;
-	background-image: url('images/headernav_05.jpg');
 }
 
 li#mainnav_06 a {
 	width: 60px;
-	background-image: url('images/headernav_06.jpg');
 }
 
 li#mainnav_07 a {
 	width: 74px;
-	background-image: url('images/headernav_07.jpg');
 }
 
 li#mainnav_08 a {
 	width: 42px;
-	background-image: url('images/headernav_08.jpg');
 }
 
 li#mainnav_09 a {
 	width: 49px;
-	background-image: url('images/headernav_09.jpg');
 }
 
 li#mainnav_10 a {
 	width: 45px;
-	background-image: url('images/headernav_10.jpg');
 }
 
 li#mainnav_11 a {
 	margin-right: 0px;
 	width: 60px;
-	background-image: url('images/headernav_11.jpg');
 }
 
 
@@ -3798,10 +3819,11 @@ li#roster_nogusta {
 /* Recent Record */
 
 #recentrecord {
-	width: 229px;
+	width: 225px;
 	height: 193px;
 	color: #fff;
-	background: #f21000 url('images/recentrecord_bg.jpg') repeat-y 0% 0%;
+  size: 10px;
+	background: #623421 repeat-y 0% 0%;
 	font-weight: bold;
 }
 
@@ -3814,20 +3836,14 @@ li#roster_nogusta {
 }
 
 #recentrecord h2 {
-	width: 229px;
+	width: 170px;
 	height: 76px;
 	color: inherit;
-	background: #c80400 url('images/recentrecord_title.jpg') no-repeat 0% 50%;
+  margin-left: 30px;
+	background: #63A355 no-repeat 0% 50%;
 }
 
-#recentrecord ul {
-	width: 229px;
-}
 
-#recentrecord li {
-	color: inherit;
-	background: #a21219 url('images/recentrecord_bullet.gif') no-repeat 9px 50%;
-}
 
 
 /* Latest Matches */
@@ -13832,3 +13848,6 @@ label{
   padding: 20px 50px;
 }
 
+body {
+  background-image: url(https://humanidades.com/wp-content/uploads/2018/09/cafe-2-e1578772193199.jpg);
+}

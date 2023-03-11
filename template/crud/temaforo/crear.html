@@ -24,14 +24,19 @@
       {# Widget Tweaks #}
       {% load widget_tweaks %}
 
+
       {% load static %}
       <div class="main-head">
         <nav class="main">
           <h1 id="logo">Hola</h1>
           <ul>
-            <li><a href="{% url 'modulo1:logoutforo' %}">Logout</a></li>
-            <li><a href="{% url 'modulo1:crearrefo' %}">Register</a></li>
-            <li><a href="{% url 'modulo1:loginforo' %}">Login</a></li>
+            {% if request.user.is_authenticated %}
+            <li><a href="{% url 'logout' %}">Salir</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'registrarse' %}">Registrarse</a></li>
+            {% endif %}
+            
           </ul>
         </nav>
       </div>
@@ -46,8 +51,13 @@
 
         <nav class="second-nav">
           <ul>
+            {% if request.user.is_authenticated %}
             <li class="second-nav"><a class="feed" href="{% url 'index' %}">Inicio</a></li>
             <li class="second-nav"><a class="profile" href="{% url 'modulo1:leerpef' %}">Mi Perfil</a></li>
+            {% else %}
+            <li class="second-nav"><a class="feed" href="{% url 'index' %}">Inicio</a></li>
+            {% endif %}
+
           </ul>
         </nav>
 

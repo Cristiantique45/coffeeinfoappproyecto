@@ -1,14 +1,52 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Contacto, Registrarseforo, Foro
+from django.contrib.auth.models import User
+from .models import Contacto ,Comentario, Temaforo
 
 
 
 
 
-class CustomUserCreationForm(UserCreationForm):
-    pass
+class RegistroUserForm(UserCreationForm):
+    password1 = forms.CharField(
+        label="Contraseña",
+        strip=False,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
+        help_text='',
+    )
+    password2 = forms.CharField(
+        label="Confirmar contraseña",
+        strip=False,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
+        help_text='',
+    )
+    
+    
+    class Meta:
+        model = User
+        fields = ['username', 'first_name','last_name', 'email']
+        help_texts = {K:"" for K in fields}
+        
+        
+        
+        
+class ComentarioForm(forms.ModelForm):
+    comentario = forms.Textarea() 
+    class Meta:
+        model =  Comentario
+        fields = ['comentario', 'imagen_idimagen']
+        
+        
+        
+class CrearTemaForm(forms.ModelForm):
+    
+    class Meta:
+        model = Temaforo
+        fields = ['categoriaforo_idcategoriaforo', 'nombre', 'foro_idforo']
+
+
+
 
 
 class ContactoForm(forms.ModelForm):
@@ -24,10 +62,11 @@ class RegistrarseforoForm(forms.ModelForm):
     correo = forms.EmailField(max_length=45)
     password = forms.CharField(max_length=120)
 
+
         
     
     class Meta:
-        model = Registrarseforo
+        #model = Registrarseforo
         fields = '__all__'
         widgets = {
             'password': forms.PasswordInput(),
@@ -35,9 +74,9 @@ class RegistrarseforoForm(forms.ModelForm):
         
     def clean_correo(self):
         correo = self.cleaned_data.get('correo')
-        if Registrarseforo.objects.filter(correo=correo).exists():
-            raise forms.ValidationError('Este correo electrónico ya está en uso')
-        return correo
+        #if Registrarseforo.objects.filter(correo=correo).exists():
+            #raise forms.ValidationError('Este correo electrónico ya está en uso')
+        #return correo
     
     
 class MyAuthenticationForm(AuthenticationForm):

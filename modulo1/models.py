@@ -10,6 +10,29 @@ from django.conf import settings
 import os
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password, check_password as auth_check_password
+from django.contrib.auth.models import User
+
+
+class AccountEmailaddress(models.Model):
+    email = models.CharField(unique=True, max_length=254)
+    verified = models.IntegerField()
+    primary = models.IntegerField()
+    user = models.ForeignKey('AuthUser', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'account_emailaddress'
+
+
+class AccountEmailconfirmation(models.Model):
+    created = models.DateTimeField()
+    sent = models.DateTimeField(blank=True, null=True)
+    key = models.CharField(unique=True, max_length=64)
+    email_address = models.ForeignKey(AccountEmailaddress, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'account_emailconfirmation'
 
 
 class Ainsecticida(models.Model):
@@ -22,11 +45,76 @@ class Ainsecticida(models.Model):
         db_table = 'ainsecticida'
 
 
+class AuthGroup(models.Model):
+    name = models.CharField(unique=True, max_length=150)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_group'
+
+
+class AuthGroupPermissions(models.Model):
+    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
+    permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_group_permissions'
+        unique_together = (('group', 'permission'),)
+
+
+class AuthPermission(models.Model):
+    name = models.CharField(max_length=255)
+    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
+    codename = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_permission'
+        unique_together = (('content_type', 'codename'),)
+
+
+class AuthUser(models.Model):
+    password = models.CharField(max_length=128)
+    last_login = models.DateTimeField(blank=True, null=True)
+    is_superuser = models.IntegerField()
+    username = models.CharField(unique=True, max_length=150)
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+    email = models.CharField(max_length=254)
+    is_staff = models.IntegerField()
+    is_active = models.IntegerField()
+    date_joined = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user'
+
+
+class AuthUserGroups(models.Model):
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user_groups'
+        unique_together = (('user', 'group'),)
+
+
+class AuthUserUserPermissions(models.Model):
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user_user_permissions'
+        unique_together = (('user', 'permission'),)
+
+
 class Categoriaforo(models.Model):
     idcategoriaforo = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=65)
     descripcion = models.TextField()
-    foro_idforo = models.ForeignKey('Foro', models.DO_NOTHING, db_column='foro_idforo')
     
     def __str__(self):
         return f'Categoria: {self.nombre}'
@@ -40,17 +128,17 @@ class Comentario(models.Model):
     idcomentario = models.AutoField(primary_key=True)
     comentario = models.TextField()
     fechahoracoment = models.DateTimeField(default=timezone.now)
-    postforo_idpostforo = models.ForeignKey('Postforo', models.DO_NOTHING, db_column='postforo_idpostforo')
-    registrarseforo_idregistroforo = models.ForeignKey('Registrarseforo', models.DO_NOTHING, db_column='registrarseforo_idregistroforo')
+    usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario')
     imagen_idimagen = models.ForeignKey('Imagen', models.DO_NOTHING, db_column='imagen_idimagen')
-    perfilforo_idperfilforo = models.ForeignKey('Perfilforo', models.DO_NOTHING, db_column='perfilforo_idperfilforo', related_name='comentarios')
+    perfilforo_idperfilforo = models.ForeignKey('Perfilforo', models.DO_NOTHING, db_column='perfilforo_idperfilforo')
+    temaforo_idtemaforo = models.ForeignKey('Temaforo', models.DO_NOTHING, db_column='temaforo_idtemaforo', related_name='comentarios')
     
     def __str__(self):
-        return f'{self.perfilforo_idperfilforo} {self.registrarseforo_idregistroforo} -> {self.comentario}'
+        return f'{self.usuario} -> {self.comentario}'
 
-    #la clase meta nos dice como se va comportar esa clase
+#la clase meta nos dice como se va comportar esa clase
     class Meta:
-        #ordering nos ayuda a tener un orden ascedente
+         #ordering nos ayuda a tener un orden ascedente
         ordering = ['-fechahoracoment']
         managed = False
         db_table = 'comentario'
@@ -62,11 +150,65 @@ class Crearhiloforo(models.Model):
     perfilforo_idperfilforo = models.ForeignKey('Perfilforo', models.DO_NOTHING, db_column='perfilforo_idperfilforo')
     
     def __str__(self):
-        return f'Hilo: {self.hilo}'
+        return f'Hilo: {self.hilo}'    
+    
 
     class Meta:
         managed = False
         db_table = 'crearhiloforo'
+
+
+class DjangoAdminLog(models.Model):
+    action_time = models.DateTimeField()
+    object_id = models.TextField(blank=True, null=True)
+    object_repr = models.CharField(max_length=200)
+    action_flag = models.PositiveSmallIntegerField()
+    change_message = models.TextField()
+    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'django_admin_log'
+
+
+class DjangoContentType(models.Model):
+    app_label = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'django_content_type'
+        unique_together = (('app_label', 'model'),)
+
+
+class DjangoMigrations(models.Model):
+    app = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    applied = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'django_migrations'
+
+
+class DjangoSession(models.Model):
+    session_key = models.CharField(primary_key=True, max_length=40)
+    session_data = models.TextField()
+    expire_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'django_session'
+
+
+class DjangoSite(models.Model):
+    domain = models.CharField(unique=True, max_length=100)
+    name = models.CharField(max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'django_site'
 
 
 class Enfermedades(models.Model):
@@ -87,7 +229,7 @@ class Enfermedades(models.Model):
 class Foro(models.Model):
     idforo = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=45)
-    
+    categoriaforo_idcategoriaforo = models.ForeignKey(Categoriaforo, models.DO_NOTHING, db_column='categoriaforo_idcategoriaforo')
     
     def __str__(self):
         return f'{self.nombre}'
@@ -122,16 +264,13 @@ class Imagen(models.Model):
     idimagen = models.AutoField(primary_key=True)
     fechahoraimg = models.DateTimeField(default=timezone.now)
     encabezado = models.CharField(max_length=55, blank=True, null=True)
-    imagen = models.CharField(max_length=120, blank=True, null=True)
-    postforo_idpostforo = models.ForeignKey('Postforo', models.DO_NOTHING, db_column='postforo_idpostforo')
-    registrarseforo_idregistroforo = models.ForeignKey('Registrarseforo', models.DO_NOTHING, db_column='registrarseforo_idregistroforo')
+    imagen = models.ImageField(max_length=120, blank=True, null=True)
+    usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario')
     
     def __str__(self):
-        return f'Id: {self.idimagen} Encabezado: {self.encabezado}'
+        return f'Encabezado: {self.encabezado}'
 
     class Meta:
-        # ordering nos ayuda a tener un orden ascedente
-        ordering = ['-fechahoraimg']
         managed = False
         db_table = 'imagen'
 
@@ -231,12 +370,12 @@ class Perdidas(models.Model):
     class Meta:
         managed = False
         db_table = 'perdidas'
-
+        
 #esto guarda la imagen que subimos, en la carpeta usuario, crea una carpeta con el nombre del usuario
 #y dentro la imagen que subio de su perfil
 
 def directorio_user_path_perfil(instance, filename):
-    nombre_imagen = 'usuario/{0}/perfil.png'.format(instance.registrarseforo_idregistroforo.nombre)
+    nombre_imagen = 'usuario/{0}/perfil.png'.format(instance.usuario.username)
     #donde vamos a guardar ese archivo
     full_path = os.path.join(settings.MEDIA_ROOT, nombre_imagen)
         
@@ -246,31 +385,21 @@ def directorio_user_path_perfil(instance, filename):
     return nombre_imagen
 #upload_to=directorio_user_path_perfil,
 
+
 class Perfilforo(models.Model):
     idperfilforo = models.AutoField(primary_key=True)
     fnacimiento = models.DateField(blank=True, null=True)
     intereses = models.TextField(blank=True, null=True)
     fotoperfil = models.ImageField(default='logocoffee.png', upload_to=directorio_user_path_perfil)
-    registrarseforo_idregistroforo = models.ForeignKey('Registrarseforo', models.DO_NOTHING, db_column='registrarseforo_idregistroforo')
+    usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario')
     
     def __str__(self):
-        return f'{self.fotoperfil} Perfil de {self.registrarseforo_idregistroforo}'
-    
+        return f'Perfil de {self.usuario}'
 
     class Meta:
-        ordering = ['-registrarseforo_idregistroforo']
+        ordering = ['-idperfilforo']
         managed = False
         db_table = 'perfilforo'
-
-
-class Perfilforopostforo(models.Model):
-    idperfilforopostforo = models.AutoField(primary_key=True)
-    postforo_idpostforo = models.ForeignKey('Postforo', models.DO_NOTHING, db_column='postforo_idpostforo')
-    perfilforo_idperfilforo = models.ForeignKey(Perfilforo, models.DO_NOTHING, db_column='perfilforo_idperfilforo')
-
-    class Meta:
-        managed = False
-        db_table = 'perfilforopostforo'
 
 
 class Persona(models.Model):
@@ -314,18 +443,6 @@ class Plagas(models.Model):
         db_table = 'plagas'
 
 
-class Postforo(models.Model):
-    idpostforo = models.AutoField(primary_key=True)
-    descripcion = models.TextField()
-    
-    def __str__(self):
-        return f'{self.idpostforo}: {self.descripcion}'
-
-    class Meta:
-        managed = False
-        db_table = 'postforo'
-
-
 class Ppreventivaenfer(models.Model):
     idppreventivaenfer = models.AutoField(primary_key=True)
     controlcultural = models.TextField()
@@ -352,8 +469,9 @@ class Ppreventivasplaga(models.Model):
 
 class Reaccionpost(models.Model):
     idreaccionpost = models.AutoField(primary_key=True)
-    postforo_idpostforo = models.ForeignKey(Postforo, models.DO_NOTHING, db_column='postforo_idpostforo')
-    perfilforo_idperfilforo = models.ForeignKey(Perfilforo, models.DO_NOTHING, db_column='perfilforo_idperfilforo')
+    tiporeaccion = models.CharField(max_length=4, blank=True, null=True)
+    usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario')
+    comentario_idcomentario = models.ForeignKey(Comentario, models.DO_NOTHING, db_column='comentario_idcomentario')
 
     class Meta:
         managed = False
@@ -380,32 +498,6 @@ class Recomendacionplaga(models.Model):
         db_table = 'recomendacionplaga'
 
 
-class Registrarseforo(models.Model):
-    idregistroforo = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=45)
-    correo = models.CharField(max_length=45,  unique= True)
-    password = models.CharField(max_length=120)
-    is_active = models.BooleanField(default=True)
-    foro_idforo = models.ForeignKey(Foro, models.DO_NOTHING, db_column='foro_idforo')
-    
-    # se sobreescribe la funcion "save" para encriptar la contraseña antes de que sea guardada en la base de datos
-    def save(self, *args, **kwargs):
-        self.password = make_password(self.password)
-        super(Registrarseforo, self).save(*args, **kwargs)
-        
-        
-    #Este metodo es para validar que la contraseña sea igual a la contrasea almab+cenada en la base de datos
-    def check_password(self, raw_password):
-        return auth_check_password(raw_password, self.password)
-    
-    def __str__(self):
-        return f'{self.nombre}'
-
-    class Meta:
-        managed = False
-        db_table = 'registrarseforo'
-
-
 class Rfinanciero(models.Model):
     idrfinanciero = models.AutoField(primary_key=True)
     persona_idpersona = models.ForeignKey(Persona, models.DO_NOTHING, db_column='persona_idpersona')
@@ -429,13 +521,67 @@ class Rfinancierolote(models.Model):
         db_table = 'rfinancierolote'
 
 
+class SocialaccountSocialaccount(models.Model):
+    provider = models.CharField(max_length=30)
+    uid = models.CharField(max_length=191)
+    last_login = models.DateTimeField()
+    date_joined = models.DateTimeField()
+    extra_data = models.TextField()
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'socialaccount_socialaccount'
+        unique_together = (('provider', 'uid'),)
+
+
+class SocialaccountSocialapp(models.Model):
+    provider = models.CharField(max_length=30)
+    name = models.CharField(max_length=40)
+    client_id = models.CharField(max_length=191)
+    secret = models.CharField(max_length=191)
+    key = models.CharField(max_length=191)
+
+    class Meta:
+        managed = False
+        db_table = 'socialaccount_socialapp'
+
+
+class SocialaccountSocialappSites(models.Model):
+    socialapp = models.ForeignKey(SocialaccountSocialapp, models.DO_NOTHING)
+    site = models.ForeignKey(DjangoSite, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'socialaccount_socialapp_sites'
+        unique_together = (('socialapp', 'site'),)
+
+
+class SocialaccountSocialtoken(models.Model):
+    token = models.TextField()
+    token_secret = models.TextField()
+    expires_at = models.DateTimeField(blank=True, null=True)
+    account = models.ForeignKey(SocialaccountSocialaccount, models.DO_NOTHING)
+    app = models.ForeignKey(SocialaccountSocialapp, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'socialaccount_socialtoken'
+        unique_together = (('app', 'account'),)
+
+
 class Temaforo(models.Model):
     idtemaforo = models.AutoField(primary_key=True)
     nombre = models.TextField()
+    fecha = models.DateTimeField(default=timezone.now)
+    usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario')
     foro_idforo = models.ForeignKey(Foro, models.DO_NOTHING, db_column='foro_idforo')
     categoriaforo_idcategoriaforo = models.ForeignKey(Categoriaforo, models.DO_NOTHING, db_column='categoriaforo_idcategoriaforo')
-
+    
+    def __str__(self):
+        return f'Tema de: {self.usuario} : {self.nombre}'
     class Meta:
+        ordering = ['-idtemaforo']
         managed = False
         db_table = 'temaforo'
 
@@ -624,13 +770,16 @@ class Variedadgenetica(models.Model):
 
 class Vistas(models.Model):
     idvistas = models.AutoField(primary_key=True)
+    fechahoravista = models.DateTimeField(default=timezone.now)
+    usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario')
     temaforo_idtemaforo = models.ForeignKey(Temaforo, models.DO_NOTHING, db_column='temaforo_idtemaforo')
 
     class Meta:
         managed = False
         db_table = 'vistas'
-        
-        
+
+
+
 opciones_consultas = [
     [0, "consulta"],
     [1, "reclamo"],

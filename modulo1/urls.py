@@ -20,16 +20,14 @@ from . import views
 from django.contrib.auth.views import LoginView,LogoutView
 #cada vez que acceda tiene que estar logueado
 from django.contrib.auth.decorators import login_required
-from .views import registro_usuario
+from .views import registro
 from django.contrib.auth import views as auth_views
 
-urlpatterns =[ 
-              
-   # path('accounts/', include('django.contrib.auth.urls')),
-    path('registro/', registro_usuario, name='registro_usuario'),
-    
+urlpatterns = [
+    path('registro/', registro, name='registro_usuario'),
+
     #--------------------------------------------------------------------Ainsecticida--------------------------------------------------------------------------------------#
-     
+    
     path('Ainsecticida/', ListadoAinsecticida.as_view(template_name = "crud/ainsecticida/index.html"), name='leera'),
     
     # La ruta 'detalles' en donde mostraremos una pagina con los detalles de un Categoria o registro 
@@ -63,13 +61,15 @@ urlpatterns =[
 
 #------------------------------------------------------------------COMENTARIO------------------------------------------------------------------------------------------
 
-    path('Comentario/',ListadoComentario.as_view(template_name = "crud/comentario/index.html"), name='leerco'),
+    path('Comentario/', ListadoComentario.as_view(template_name="crud/comentario/index.html"), name='leerco'),
     
     # La ruta 'detalles' en donde mostraremos una pagina con los detalles de un Categoria o registro 
     path('Comentario/detalle/<int:pk>',login_required(ComentarioDetalle.as_view(template_name = "crud/comentario/detalle.html")), name='detallesco'),
+    
+    path('', login_required(perfilforo_user), name='crearcoment'),
  
     # La ruta 'crear' en donde mostraremos un formulario para crear un nuevo Categoria o registro  
-    path('Comentario/crear/',login_required(ComentarioCrear.as_view(template_name = "crud/comentario/crear.html")), name='crearco'),
+    path('Comentario/crear/<int:perfilforo_idperfilforo>/',login_required(crear_comentario), name='crearco'),
  
     # La ruta 'actualizar' en donde mostraremos un formulario para actualizar un categoriao registro de la Base de Datos 
     path('Comentario/editar/<int:pk>',login_required(ComentarioActualizar.as_view(template_name = "crud/comentario/actualizar.html")), name='actualizarco'), 
@@ -95,7 +95,7 @@ urlpatterns =[
     
 
     #----------------------------------------------------------------ENFERMEDADES-------------------------------------------------------------------------------------------------
-     path('Enfermedades/', ListadoEnfermedades.as_view(template_name = "crud\enfermedades\index.html"), name='leeref'),
+    path('Enfermedades/', ListadoEnfermedades.as_view(template_name = "crud\enfermedades\index.html"), name='leeref'),
     
     # La ruta 'detalles' en donde mostraremos una pagina con los detalles de un Categoria o registro 
     path('Enfermedades/detalle/<int:pk>',EnfermedadesDetalle.as_view(template_name = "crud\enfermedades\detalle.html"), name='detallesef'),
@@ -114,8 +114,6 @@ urlpatterns =[
     
     #--------------------------------------------------------Foro--------------------------------------------------------------------------------------#
 
-    path('Loginforo/', views.foro_login, name='loginforo'),
-    path('Logoutforo/', views.foro_logout, name='logoutforo'),
 
     path('Foro/', ListadoForo.as_view(template_name = "crud/foro/index.html"), name='leerfr'),
     
@@ -363,19 +361,19 @@ urlpatterns =[
 
 #--------------------------------------------------------Perfilforo postforo--------------------------------------------------------------------------------------#
 
-    path('Postperfil/', ListadoPerfilforopostforo.as_view(template_name = "crud\perfilpostforo\index.html"), name='leerpfpf'),
+    #path('Postperfil/', ListadoPerfilforopostforo.as_view(template_name = "crud\perfilpostforo\index.html"), name='leerpfpf'),
     
     # La ruta 'detalles' en donde mostraremos una página con los detalles de un Categoria o registro 
-    path('Postperfil/detalle/<int:pk>',PerfilforopostforoDetalle.as_view(template_name = "crud\perfilpostforo\detalle.html"), name='detallespfpf'),
+    #path('Postperfil/detalle/<int:pk>',PerfilforopostforoDetalle.as_view(template_name = "crud\perfilpostforo\detalle.html"), name='detallespfpf'),
  
     # La ruta 'crear' en donde mostraremos un formulario para crear un nuevo Categoria o registro  
-    path('Postperfil/crear/', PerfilforopostforoCrear.as_view(template_name = "crud\perfilpostforo\crear.html"), name='crearpfpf'),
+    #path('Postperfil/crear/', PerfilforopostforoCrear.as_view(template_name = "crud\perfilpostforo\crear.html"), name='crearpfpf'),
  
     # La ruta 'actualizar' en donde mostraremos un formulario para actualizar un categoriao registro de la Base de Datos 
-    path('Postperfil/editar/<int:pk>', PerfilforopostforoActualizar.as_view(template_name = "crud/perfilpostforo/actualizar.html"), name='actualizarpfpf'), 
+    #path('Postperfil/editar/<int:pk>', PerfilforopostforoActualizar.as_view(template_name = "crud/perfilpostforo/actualizar.html"), name='actualizarpfpf'), 
  
     # La ruta 'eliminar' que usaremos para eliminar un Categoria o registro de la Base de Datos 
-    path('Postperfil/eliminar/<int:pk>', PerfilforopostforoEliminar.as_view(), name='crud\perfilpostforo\eliminar.html'),
+    #path('Postperfil/eliminar/<int:pk>', PerfilforopostforoEliminar.as_view(), name='crud\perfilpostforo\eliminar.html'),
     
     
     
@@ -439,19 +437,19 @@ urlpatterns =[
 
     #---------------------------------------------------------POST FORO---------------------------------------------------#
     
-    path('Postforo/', ListadoPostforo.as_view(template_name = "crud/postforo/index.html"), name='leerpof'),
+    #path('Postforo/', ListadoPostforo.as_view(template_name = "crud/postforo/index.html"), name='leerpof'),
     
     # La ruta 'detalles' en donde mostraremos una pagina con los detalles de un Categoria o registro 
-    path('Postforo/detalle/<int:pk>',login_required(PostforoDetalle.as_view(template_name = "crud\postforo\detalle.html")), name='detallespof'),
+    #path('Postforo/detalle/<int:pk>',login_required(PostforoDetalle.as_view(template_name = "crud\postforo\detalle.html")), name='detallespof'),
  
     # La ruta 'crear' en donde mostraremos un formulario para crear un nuevo Categoria o registro  
-    path('Postforo/crear/',login_required(PostforoCrear.as_view(template_name = "crud\postforo\crear.html")), name='crearpof'),
+    #path('Postforo/crear/',login_required(PostforoCrear.as_view(template_name = "crud\postforo\crear.html")), name='crearpof'),
     
     # La ruta 'actualizar' en donde mostraremos un formulario para actualizar un categoriao registro de la Base de Datos 
-    path('Postforo/editar/<int:pk>',login_required(PostforoActualizar.as_view(template_name = "crud/postforo/actualizar.html")), name='actualizarpof'), 
+    #path('Postforo/editar/<int:pk>',login_required(PostforoActualizar.as_view(template_name = "crud/postforo/actualizar.html")), name='actualizarpof'), 
  
     # La ruta 'eliminar' que usaremos para eliminar un Categoria o registro de la Base de Datos 
-    path('Postforo/eliminar/<int:pk>',login_required(PostforoEliminar.as_view()), name='crud\postforo\eliminar.html'),
+    #path('Postforo/eliminar/<int:pk>',login_required(PostforoEliminar.as_view()), name='crud\postforo\eliminar.html'),
     
     
     
@@ -555,13 +553,13 @@ urlpatterns =[
     #path('Registroforo/detalle/<int:pk>',RegistrarseforoDetalle.as_view(template_name = "crud/registrarseforo/detalle.html"), name='detallesrefo'),
  
     # La ruta 'crear' en donde mostraremos un formulario para crear un nuevo Categoria o registro  
-    path('Registroforo/crear/', RegistrarseforoCrear.as_view(template_name = "crud/registrarseforo/crear.html"), name='crearrefo'),
+    #path('Registroforo/crear/', RegistrarseforoCrear.as_view(template_name = "crud/registrarseforo/crear.html"), name='crearrefo'),
     
     # La ruta 'actualizar' en donde mostraremos un formulario para actualizar un categoriao registro de la Base de Datos 
-    path('Registroforo/editar/<int:pk>',login_required(RegistrarseforoActualizar.as_view(template_name = "crud/registrarseforo/actualizar.html")), name='actualizarrefo'), 
+    #path('Registroforo/editar/<int:pk>',login_required(RegistrarseforoActualizar.as_view(template_name = "crud/registrarseforo/actualizar.html")), name='actualizarrefo'), 
  
     # La ruta 'eliminar' que usaremos para eliminar un Categoria o registro de la Base de Datos 
-    path('Registroforo/eliminar/<int:pk>',login_required(RegistrarseforoEliminar.as_view()), name='crud/registrarseforo/eliminar.html'),
+    #path('Registroforo/eliminar/<int:pk>',login_required(RegistrarseforoEliminar.as_view()), name='crud/registrarseforo/eliminar.html'),
     
     
     
@@ -631,7 +629,7 @@ urlpatterns =[
     path('Tema/detalle/<int:pk>',login_required(TemaforoDetalle.as_view(template_name = "crud/temaforo/detalle.html")), name='detallestefo'),
  
     # La ruta 'crear' en donde mostraremos un formulario para crear un nuevo Categoria o registro  
-    path('Tema/crear/',login_required(TemaforoCrear.as_view(template_name = "crud/temaforo/crear.html")), name='creartefo'),
+    path('Tema/crear/',login_required(crear_tema), name='creartefo'),
     
     # La ruta 'actualizar' en donde mostraremos un formulario para actualizar un categoriao registro de la Base de Datos 
     path('Tema/editar/<int:pk>',login_required(TemaforoActualizar.as_view(template_name = "crud/temaforo/actualizar.html")), name='actualizartefo'), 

@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.views.generic import ListView, DetailView 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 #from django.contrib.auth.views import Loginview
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import   login, logout, authenticate
 from django.db.models import Q, F, Value
  
@@ -19,7 +19,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import request
 from django.http import HttpRequest
 from django.http import HttpResponse
-from .forms import ContactoForm, RegistrarseforoForm, MyAuthenticationForm
+from .forms import  RegistroUserForm, ContactoForm, ComentarioForm, CrearTemaForm
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -29,8 +30,124 @@ from .forms import ContactoForm, RegistrarseforoForm, MyAuthenticationForm
 def Home(request):
     return render(request, "principal.html")
 
-def Login(request):
-    return render (request, "login.html")
+#------------------------logout--------------------------------
+
+def logout_request(request):
+    logout(request)
+    messages.info(request, "Saliste exitosamente")
+    return redirect("index")
+
+#-------------------------------------login--------------------------------
+
+def Login_request(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            #vamos a guardar en una varible usuario lo que el usuario ingrese en el campo "username"
+            usuario = form.cleaned_data.get('username')
+            contraseña = form.cleaned_data.get('password')                      
+            user = authenticate(request, username=usuario, password=contraseña)
+            #si tiene algun valor
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"¡Bienvenido {usuario} a Coffeeinfoapp!")
+                return redirect('index')
+            else:
+                messages.error(request, "usuario o contraseña equivocada")
+        else:
+            messages.error(request, "usuario o contraseña incorrecta")         
+    form = AuthenticationForm()
+    return render (request, "registration/login.html", {"form": form})
+
+#------------------------------------registro----------------------------------------------
+
+def registro(request):
+    data = {
+        'form' : RegistroUserForm()
+    }
+    if request.method == 'POST':
+        formulario = RegistroUserForm(data=request.POST)
+        if formulario.is_valid():
+            usuario = formulario.save()
+            #autentiar el usuario y regresar al inicio
+            username = formulario.cleaned_data['username']
+            password = formulario.cleaned_data['password1']
+            usuario = authenticate(request, username=username, password=password)
+            if usuario is not None:
+                login(request, usuario)
+                messages.success(request, f"Cuenta creada exitosamente {usuario}, ahora inicia sesion con ella")
+                return redirect('login')
+            else:
+                messages.error(request, "Verifica las contraseñas, deben ser iguales y deben contener más de 12 caracteres con letras, numeros y simbolos")
+                
+        else:
+            messages.error(request, "Verifica las contraseñas, deben ser iguales y deben contener más de 12 caracteres con letras, numeros y simbolos")
+    
+    return render(request, 'registration/register.html', data)
+
+
+#------------------------------------crear comentario----------------------------------------------
+
+def perfilforo_user(request):
+    perfilforo = Perfilforo.objects.get(usuario=request.user) # Obtener el id de  perfilforo del usuario autenticado
+    url = f"Comentario/crear/{perfilforo.idperfilforo}/" # Crear la URL que incluye automáticamente el perfilforo_idperfilforo
+    return redirect(url) # Redirigir al usuario a la URL creada
+
+
+
+def crear_comentario(request, perfilforo_idperfilforo):
+        perfilforo = get_object_or_404(Perfilforo, usuario=request.user)
+        data={
+                'form' : ComentarioForm()
+            }
+        if request.method == 'POST':
+            form = ComentarioForm(data=request.POST)
+            if form.is_valid():
+                post = form.save(commit=False)
+                if request.user.is_authenticated:
+                    post.usuario = request.user  #current_user
+                    post.perfilforo_idperfilforo = perfilforo # asignamos el PerfilForo al comentario
+                    post.save()
+                    messages.info(request, f'Has hecho un comentario')
+                    return redirect('modulo1:leerco')
+                else:
+                    messages.error(request, 'Debes iniciar sesión para comentar')
+                
+        else:
+                       
+            form = ComentarioForm()
+        context ={
+            'crear_comentario':crear_comentario, 'form':form
+        }
+                       
+        return render(request, 'crud/comentario/crear.html', context)
+
+#------------------------------------crear Tema----------------------------------------------
+
+def crear_tema(request):
+    data= {
+        'form' : CrearTemaForm()
+    }
+    if request.method == 'POST':
+        form = CrearTemaForm(data=request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            if request.user.is_authenticated:
+                post.usuario = request.user  #current_user
+                post.save()
+                messages.info(request, f'Tema creado exitosamente')
+                return redirect('modulo1:leertefo')
+            else:
+                messages.error(request, 'Debes iniciar sesión para crear tema')
+                
+    else:
+        form = CrearTemaForm()
+    context ={
+        'crear_tema':crear_tema, 'form':form
+    }
+        
+    return render(request, 'crud/temaforo/crear.html', context)
+
 
 def contacto(request):
     data = {
@@ -61,64 +178,9 @@ def principal(request):
     else:
         return redirect('login')
 
-#-------------------------------------------------------------------------------------------------------------------------------------------------------#
-#--------------------------------------------REGISTRO-------------------------------------------------#
 
-def registro_usuario(request):
+               
 
-    if request.method == 'POST':
-        formulario = CustomUserForm(request.POST)
-        if formulario.is_valid():
-            formulario.save()
-            #autentiar el usuario y regresar al inicio
-            username = formulario.cleaned_data['username']
-            password = formulario.cleaned_data['password']
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            return redirect(to='home')
-
-    return render(request, 'registration/register.html')    
-
-#-----------------------------------------------------------------------------------------------------#
-
-def foro_login(request):
-    if request.method == "POST":
-        form = MyAuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            #vamos a guardar en una varible usuario lo que el usuario ingrese en el campo "username"
-            usuario = form.cleaned_data.get('Enter_username')
-            contraseña = form.cleaned_data.get('Enter_password')
-            
-            try:
-                registrado = Registrarseforo.objects.get(nombre=usuario)
-            except Registrarseforo.DoesNotExist:
-                registrado = None
-                
-            user = authenticate(request, usuario=registrado.nombre, password=contraseña)
-            #si tiene algun valor
-            if user is not None:
-                login(request, user)
-                messages.info(request, f"Estas logeado como {usuario}")
-                 # Agregue un registro para depurar
-                Logger.debug(f"Usuario {usuario} autenticado y logueado")
-                return redirect('modulo1:leercf')
-            else:
-                messages.error(request, "usuario o contraseña equivocada")
-        else:
-            messages.error(request, "usuario o contraseña equivocada")         
-    
-    form = MyAuthenticationForm
-    return render (request, "login_foro.html", {"form": form})
-
-
-
-def foro_logout(request):
-    logout(request)
-    #return render (request, "logout_foro.html")
-    messages.info(request, "Saliste exitosamente")
-    return redirect("modulo1:leercf")
-
- 
 
      
     # librerias del crud
@@ -215,6 +277,7 @@ class CategoriaforoEliminar(SuccessMessageMixin, DeleteView):
 class ListadoComentario(ListView):
     model = Comentario
     context_object_name = 'comentarios'
+    paginate_by = 3
     
     #funciones para traer la foto de perfil de acuerdo al comentario
     
@@ -233,7 +296,7 @@ class ListadoComentario(ListView):
         queryset = super().get_queryset()
         buscar = self.request.GET.get('buscar')
         if buscar:
-            queryset = queryset.filter(Q (comentario__icontains=buscar))
+            queryset = queryset.filter(Q (comentario__icontains=buscar) | Q (fechahoracoment__icontains=buscar))
         return queryset
 
     
@@ -244,9 +307,10 @@ class ComentarioCrear(SuccessMessageMixin, CreateView):
     form = Comentario
     fields = "__all__"
     success_message ='Categoria creada correctamente'
+        
      
     def get_success_url(self):        
-        return reverse('modulo1:leerco') # Redireccionamos a la vista principal 'leer'
+        return render('modulo1:leerco') # Redireccionamos a la vista principal 'leer'
 
 class ComentarioDetalle (DetailView):
     model = Comentario
@@ -904,40 +968,40 @@ class PerfilforoEliminar(SuccessMessageMixin, DeleteView):
 
 #----------------------------------perfilforo postforo------------------------------------------------------------------------------------------------------------------#
 
-class ListadoPerfilforopostforo(ListView):
-    model = Perfilforopostforo
+#class ListadoPerfilforopostforo(ListView):
+    #model = Perfilforopostforo
     
     
-class PerfilforopostforoCrear(SuccessMessageMixin, CreateView):
-    model = Perfilforopostforo
-    form = Perfilforopostforo
-    fields = "__all__"
-    success_message ='Categoria creada correctamente'
+#class PerfilforopostforoCrear(SuccessMessageMixin, CreateView):
+    #model = Perfilforopostforo
+    #form = Perfilforopostforo
+    #fields = "__all__"
+    #success_message ='Categoria creada correctamente'
      
-    def get_success_url(self):        
-        return reverse('modulo1:leerpfpf') # Redireccionamos a la vista principal 'leer'
+    #def get_success_url(self):        
+        #return reverse('modulo1:leerpfpf') # Redireccionamos a la vista principal 'leer'
 
-class PerfilforopostforoDetalle (DetailView):
-    model = Perfilforopostforo
+#class PerfilforopostforoDetalle (DetailView):
+    #model = Perfilforopostforo
 
-class  PerfilforopostforoActualizar(SuccessMessageMixin,UpdateView):
-    model =  Perfilforopostforo
-    form = Perfilforopostforo
-    fields = "__all__" # Le decimos a Django que muestre todos los campos de la tabla 'postres' de nuestra Base de Datos 
-    success_message = 'Categoria Actualizado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
+#class  PerfilforopostforoActualizar(SuccessMessageMixin,UpdateView):
+    #model =  Perfilforopostforo
+    #form = Perfilforopostforo
+    #fields = "__all__" # Le decimos a Django que muestre todos los campos de la tabla 'postres' de nuestra Base de Datos 
+    #success_message = 'Categoria Actualizado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
 
-    def get_success_url(self):               
-        return reverse('modulo1:leerpfpf') # Redireccionamos a la vista principal 'leer'
-class PerfilforopostforoEliminar(SuccessMessageMixin, DeleteView): 
-    model = Perfilforopostforo
-    form = Perfilforopostforo
-    fields = "__all__"     
+    #def get_success_url(self):               
+        #return reverse('modulo1:leerpfpf') # Redireccionamos a la vista principal 'leer'
+#class PerfilforopostforoEliminar(SuccessMessageMixin, DeleteView): 
+    #model = Perfilforopostforo
+    #form = Perfilforopostforo
+    #fields = "__all__"     
  
     # Redireccionamos a la página principal luego de eliminar un registro o postre
-    def get_success_url(self): 
-        success_message = 'Categoria Eliminado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
-        messages.success (self.request, (success_message))       
-        return reverse('modulo1:leerpfpf') # Redireccionamos a la vista principal 'leer'
+    #def get_success_url(self): 
+        #success_message = 'Categoria Eliminado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
+        #messages.success (self.request, (success_message))       
+        #return reverse('modulo1:leerpfpf') # Redireccionamos a la vista principal 'leer'
     
     
     
@@ -1061,40 +1125,40 @@ class PlagasEliminar(SuccessMessageMixin, DeleteView):
 
 #-------------------------------------------POST FORO-------------------------------------------------------------------#
 
-class ListadoPostforo(ListView):
-    model = Postforo
+#class ListadoPostforo(ListView):
+    #model = Postforo
     
     
-class PostforoCrear(SuccessMessageMixin, CreateView):
-    model = Postforo
-    form = Postforo
-    fields = "__all__"
-    success_message ='Categoria creada correctamente'
+#class PostforoCrear(SuccessMessageMixin, CreateView):
+    #model = Postforo
+    #form = Postforo
+    #fields = "__all__"
+    #success_message ='Categoria creada correctamente'
      
-    def get_success_url(self):        
-        return reverse('modulo1:leerpof') # Redireccionamos a la vista principal 'leer'
+    #def get_success_url(self):        
+        #return reverse('modulo1:leerpof') # Redireccionamos a la vista principal 'leer'
 
-class PostforoDetalle (DetailView):
-    model = Postforo
+#class PostforoDetalle (DetailView):
+    #model = Postforo
 
-class PostforoActualizar(SuccessMessageMixin,UpdateView):
-    model =  Postforo
-    form = Postforo
-    fields = "__all__" # Le decimos a Django que muestre todos los campos de la tabla 'postres' de nuestra Base de Datos 
-    success_message = 'Categoria Actualizado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
+#class PostforoActualizar(SuccessMessageMixin,UpdateView):
+    #model =  Postforo
+    #form = Postforo
+    #fields = "__all__" # Le decimos a Django que muestre todos los campos de la tabla 'postres' de nuestra Base de Datos 
+    #success_message = 'Categoria Actualizado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
 
-    def get_success_url(self):               
-        return reverse('modulo1:leerpof') # Redireccionamos a la vista principal 'leer'
-class PostforoEliminar(SuccessMessageMixin, DeleteView): 
-    model = Postforo
-    form = Postforo
-    fields = "__all__"     
+    #def get_success_url(self):               
+        #return reverse('modulo1:leerpof') # Redireccionamos a la vista principal 'leer'
+#class PostforoEliminar(SuccessMessageMixin, DeleteView): 
+    #model = Postforo
+    #form = Postforo
+    #fields = "__all__"     
  
     # Redireccionamos a la página principal luego de eliminar un registro o postre
-    def get_success_url(self): 
-        success_message = 'Categoria Eliminado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
-        messages.success (self.request, (success_message))       
-        return reverse('modulo1:leerpof') # Redireccionamos a la vista principal 'leer'
+    #def get_success_url(self): 
+        #success_message = 'Categoria Eliminado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
+        #messages.success (self.request, (success_message))       
+        #return reverse('modulo1:leerpof') # Redireccionamos a la vista principal 'leer'
     
     
     
@@ -1297,72 +1361,7 @@ class RecomendacionplagaEliminar(SuccessMessageMixin, DeleteView):
     
     
     
-#-------------------------------------------Registrarse foro-------------------------------------------------------------------#
 
-class ListadoRegistrarseforo(ListView):
-    model = Registrarseforo
-    
-    
-class RegistrarseforoCrear(FormView):
-    model = Registrarseforo
-    form_class= RegistrarseforoForm
-    template_name = 'crud/registrarseforo/crear.html'
-    fields = "__all__"
-    success_url = ('modulo1:leerco')
-    
-    def form_valid(self, form):
-        usuario = form.save()
-        nombre = form.cleaned_data['nombre']
-        correo = form.cleaned_data['correo']
-        password = form.cleaned_data['password']
-        usuario = authenticate(self.request,nombre=nombre, correo=correo, password=password)
-        if usuario is not None:
-            foro_login(self.request, usuario, backend='django.contrib.auth.backends.ModelBackend')
-            messages.success(self.request, 'Bienvenido!')
-            return super().form_valid(form)
-        else:
-            messages.error(self.request, 'Usuario o contraseña incorrectos.')
-            return self.form_invalid(form)
-    
-    def form_invalid(self, form):
-        for field, errors in form.errors.items():
-            for error in errors:
-                messages.error(self.request, f"{field}: {error}")
-        return super().form_invalid(form)
-    
-               
-             
-    def get_success_url(self):        
-        return redirect('modulo1:leerco') # Redireccionamos a la vista principal 'leer'
-            
-        
-                
-    
-    form = Registrarseforo
-    def get_success_url(self):        
-        return reverse('modulo1:leerco') # Redireccionamos a la vista principal 'leer'    
-                
-class RegistrarseforoDetalle (DetailView):
-    model = Registrarseforo
-
-class RegistrarseforoActualizar(SuccessMessageMixin,UpdateView):
-    model =  Registrarseforo
-    form = Registrarseforo
-    fields = "__all__" # Le decimos a Django que muestre todos los campos de la tabla 'postres' de nuestra Base de Datos 
-    success_message = 'Categoria Actualizado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
-
-    def get_success_url(self):               
-        return reverse('modulo1:leerrefo') # Redireccionamos a la vista principal 'leer'
-class RegistrarseforoEliminar(SuccessMessageMixin, DeleteView): 
-    model = Registrarseforo
-    form = Registrarseforo
-    fields = "__all__"     
- 
-    # Redireccionamos a la página principal luego de eliminar un registro o postre
-    def get_success_url(self): 
-        success_message = 'Categoria Eliminado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
-        messages.success (self.request, (success_message))       
-        return reverse('modulo1:leerrefo') # Redireccionamos a la vista principal 'leer'
     
     
     
@@ -1486,9 +1485,21 @@ class RfinancieroloteEliminar(SuccessMessageMixin, DeleteView):
     
     
 #-------------------------------------------Tema foro-------------------------------------------------------------------#
+def listado_tema(request, temaforo_idtemaforo):
+    temas = get_object_or_404(Temaforo, pk=temaforo_idtemaforo)
+    comentarios = Comentario.objects.filter(temaforo=temas)
+    context = {
+        'temas': temas,
+        'comentarios': comentarios
+    }
+    
+    return render(request, 'modulo1:leerco', context)
+
 
 class ListadoTemaforo(ListView):
     model = Temaforo
+    #para paginacion
+    paginate_by = 3
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -1502,7 +1513,6 @@ class TemaforoCrear(SuccessMessageMixin, CreateView):
     model = Temaforo
     form = Temaforo
     fields = "__all__"
-    success_message ='Categoria creada correctamente'
      
     def get_success_url(self):        
         return reverse('modulo1:leertefo') # Redireccionamos a la vista principal 'leer'
@@ -2153,4 +2163,4 @@ class VistasEliminar(SuccessMessageMixin, DeleteView):
     def get_success_url(self): 
         success_message = 'Categoria Eliminado Correctamente !' # Mostramos este Mensaje luego de Editar un Postre 
         messages.success (self.request, (success_message))       
-        return reverse('modulo1:leervi') # Redireccionamos a la vista principal 'leer'
+        return reverse('modulo1:leervi') # Redireccionamos a la vista principal 'leer

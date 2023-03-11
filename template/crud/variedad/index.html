@@ -6,16 +6,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Variedades</title>
+        
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="/static/css/styles.css/" rel="stylesheet" />
+         <link href="/static/css/variedades.css/" rel="stylesheet" />
+          <link href="/static/css/variedades2.css/" rel="stylesheet" />
+       
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-
-
         {# Cargamos la librería #}
         {% load bootstrap4 %}
         {% load static %}
-
         {% if messages %}
         <ul class="messages list-group mb-3">
           {% for message in messages %}
@@ -24,47 +24,49 @@
         </ul>
         {% endif %}
     </head>
-    <body class="sb-nav-fixed">
-        {% include "nav.html" %}
+  <body data-home-page="Casa.html" data-home-page-title="Casa" class="u-body u-overlap u-xl-mode" data-lang="es"><header class="u-clearfix u-header" id="sec-623e"><div class="u-clearfix u-sheet u-sheet-1">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="#!">Start Bootstrap</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">INICIO</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!">CONTACTENOS</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">NUESTROS SERVICIOS</a>
+           
             </div>
-            <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4">Variedad</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="index.html">Parametros</a></li>
-                            <li class="breadcrumb-item active">Variedad</li>
-                        </ol>
-                        
-                            {# JS y jQuery Bootstrap #}
-                            {% bootstrap_javascript jquery='full' %} 
-                            <div align="left" class="btn_crear mb-3">
-                            <a href="crear" type="button" class="btn btn-primary">Crear</a>
-                        </div>
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                Variedad
-                            </div>
-                            <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>Código de variedad</th>
-                                            <th>Nombre</th>
-                                            <th>Imagen</th>
-                                            <th>Descripcion</th>                                        
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Código de variedad</th>
-                                            <th>Nombre</th>
-                                            <th>Imagen</th>
-                                            <th>Descripcion</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
+        </div>
+    </nav>
+    <section class="u-align-center u-clearfix u-grey-25 u-section-1" id="carousel_21d5">
+      <div class="u-clearfix u-sheet u-sheet-1">
+        <h1 class="u-align-center u-custom-font u-font-playfair-display u-hover-feature u-text u-text-custom-color-1 u-text-default u-text-1"><span class="u-file-icon u-icon u-opacity u-opacity-80 u-icon-1"><img src="images/3219291.png" alt=""></span>&nbsp;SECCION DE VARIEDADES
+        </h1>
+        <div class="cuadros u-clearfix u-gutter-50 u-layout-spacing-top-bottom u-layout-wrap u-layout-wrap-1">
+          <div class="u-gutter-0 u-layout">
+            <div class="u-layout-row">
+              <div class="u-align-center u-container-style u-gradient u-layout-cell u-radius-50 u-size-30 u-layout-cell-1">
+                <div class="u-container-layout u-container-layout-1">
+                  <img class="u-image u-image-round u-radius-10 u-image-1" src="https://i0.wp.com/farallonesdelcitara.bioexploradores.com/wp-content/uploads/2022/10/IMG_3619-2.jpg?resize=790%2C415&ssl=1" alt="" data-image-width="1300" data-image-height="1065">
+                  <h2 class="u-text u-text-custom-color-1 u-text-default u-text-2">VARIEDADES ACTUALES</h2>
+                </div>
+              </div>
+              <div class="u-align-center u-container-style u-gradient u-layout-cell u-radius-50 u-shape-round u-size-30 u-layout-cell-2">
+                <div class="u-container-layout u-container-layout-2">
+                  <img class="u-image u-image-2" src="https://www.ecured.cu/images/0/04/Catuai.jpg" data-image-width="1024" data-image-height="768">
+                  <h2 class="u-text u-text-custom-color-1 u-text-3">VARIEDADES NUEVAS</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </section>
+
+   
+                       
                                         {% for Variedad in object_list %}
                                             <tr>
                                                 <td>{{ Variedad.idvariedad }}</td>
@@ -83,18 +85,25 @@
                                                               Eliminar
                                                             </button>
                                                         </div>
-                                                    </form    
+                                                    </form>   
                                                 </td>     
                                             </tr>
                                       
                                         {% endfor %}
-                                        
-                                    </tbody>
-                                </table>
+                              
                             </div>
                         </div>
                     </div>
                 </main>
+                  {# JS y jQuery Bootstrap #}
+                            {% bootstrap_javascript jquery='full' %} 
+                            <div align="left" class="btn_crear mb-3">
+                            <a href="crear" type="button" class="btn btn-primary">Crear</a>
+                        </div>
+                        <meta name="theme-color" content="#d8dfd0">
+    <meta property="og:title" content="Casa">
+    <meta property="og:type" content="website">
+  <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">

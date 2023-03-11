@@ -22,7 +22,6 @@
             <!-- Start Page Header -->
             <div id="page_header">
                 <h1>Slave to the Gam</h1>
-                <h3>{{ user.username | upper }}</h3>
                 <!--Barra de busqueda-->
                 <form method="GET" action="{% url 'modulo1:leerco' %}">
                     <div class="input-box">
@@ -31,22 +30,38 @@
                         <button type="submit" class="boton">Buscar</button>
                     </div>
                 </form>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class="alert alert-{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
             </div>
             <!-- End of Page Header -->
             <!-- Start of Main Navigation Menu -->
             <div id="mainnav">
                 <ul>
+                    {% if request.user.is_authenticated %}
                     <li id="mainnav_01"><a href="{% url 'index' %}">Home</a></li>
-                    <li id="mainnav_02"><a href="{% url 'modulo1:leerpef' %}">Perfil</a></li>
-                    <li id="mainnav_03"><a href="#">About Us</a></li>
-                    <li id="mainnav_04"><a href="#">Matches</a></li>
+                    <li id="mainnav_03"><a href="#">Acerca de </a></li>
+                    <li id="mainnav_04"><a href="{% url 'contacto' %}">Contacto</a></li>
                     <li id="mainnav_05"><a href="#">Downloads</a></li>
-                    <li id="mainnav_06"><a href="#">cds</a></li>
-                    <li id="mainnav_07"><a href="{% url 'modulo1:leerfr' %}">Forum</a></li>
-                    <li id="mainnav_08"><a href="{% url 'modulo1:logoutforo' %}">logout</a></li>
-                    <li id="mainnav_09"><a href="{% url 'login' %}">login</a></li>
-                    <li id="mainnav_10"><a href="{% url 'register_usuario' %}">registrarse</a></li>
-                    <li id="mainnav_11"><a href="#">Members</a></li>
+                    <li id="mainnav_06"><a href="#">Servers</a></li>
+                    <li id="mainnav_07"><a href="{% url 'modulo1:leerfr' %}">Foro</a></li>
+                    <li id="mainnav_10"><a href="{% url 'logout' %}">Salir</a></li>
+                    <li class="nombre-usuario"><a href="{% url 'modulo1:leerpef' %}">{{ user.username | lower }}</a>
+                    </li>
+                    {% else %}
+                    <li id="mainnav_01"><a href="{% url 'index' %}">Home</a></li>
+                    <li id="mainnav_03"><a href="#">Acerca de</a></li>
+                    <li id="mainnav_04"><a href="{% url 'contacto' %}">Contacto</a></li>
+                    <li id="mainnav_05"><a href="#">Downloads</a></li>
+                    <li id="mainnav_06"><a href="#">Servers</a></li>
+                    <li id="mainnav_07"><a href="{% url 'modulo1:leerfr' %}">Foro</a></li>
+                    <li id="mainnav_08"><a href="{% url 'login' %}">Login</a></li>
+                    <li id="mainnav_09"><a href="{% url 'registrarse' %}">Registrarse</a></li>
+                    {% endif %}
                 </ul>
                 <div class="clearthis">&nbsp;</div>
             </div>
@@ -59,8 +74,36 @@
                         <div class="newsbox_header">
                             <!-- News Title -->
                             <h2>Comentarios</h2>
+                            <!--............-paginancion.........................-->
+
+                            {% if is_paginated %}
+                            <div>
+                                <ul class="pagination">
+                                    {% for i in paginator.page_range %}
+                                    <li class="page-item {% if page_obj.number == i %} active {% endif %} ">
+                                        <a href="?page= {{ i }}" class="page-link">{{ i }}</a>
+                                    </li>
+                                    {% endfor %}
+
+
+                                    <!--permite conocer si existe una pagina siguiente a la que no escontramos -->
+                                    {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <!--permite conocer la siguiente pagina-->
+                                        <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a>
+                                    </li>
+                                    {%else %}
+                                    <li class="page-item disabled">
+                                        <!--permite conocer la siguiente pagina-->
+                                        <a href="#" class="page-link">Next</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            {% endif %}
+
                             <ul>
-                                <li class="second-nav" id="crear-post"><a href="crear" type="button">Responder</a></li>
+                                <li class="second-nav" id="crear-post"><a href="{% url 'modulo1:crearcoment' %}" type="button">Responder</a></li>
                                 </li>
                             </ul>
                             <!-- News Date -->
@@ -69,22 +112,23 @@
                         <div class="newsbox_content">
                             <!-- News Text -->
 
-                            {% for Comentario in object_list %}
+                            {% for Comentario in Comentarios %}
                             <article>
                                 <div class="container-article">
                                     <img src="{{ comentario.perfilforo_idperfilforo.fotoperfil.url }}" />
                                     <div>
                                         <h2 class="username">
-                                            <a href="#">@{{Comentario.registrarseforo_idregistroforo}}</a>
+                                            <a href="#">@{{Comentario.usuario}}</a>
                                         </h2>
                                         <i class="clock"></i>
                                         <time data-time="#">{{ Comentario.fechahoracoment|naturaltime}}</time>
                                         <div class="post">{{Comentario.comentario}}</div>
                                         <a href="#">More...</a>
-
                                     </div>
                                 </div>
                             </article>
+                            {% empty %}
+                                <p>No hay comentarios aún.</p>
                             {% endfor %}
                         </div>
                     </div>
@@ -132,12 +176,8 @@
         <div id="leftcolumn">
             <!-- Start of Recent Record -->
             <div id="recentrecord">
-                <h2><span>Recent Record</span></h2>
-                <ul>
-                    <li>TWL : 105 - 43 - 6</li>
-                    <li>OGL : 101 - 35 - 16</li>
-                    <li>TWL : 105 - 43 - 6</li>
-                </ul>
+                <a href="{% url 'index' %}"><img class="logocoffee" src="{% static '/assets/img/logocoffee.png' %}"
+                        alt="Descripción de la imagen"></a>
                 <div class="clearthis">&nbsp;</div>
             </div>
             <!-- End of Recent Record -->

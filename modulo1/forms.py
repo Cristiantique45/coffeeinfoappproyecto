@@ -43,7 +43,7 @@ class CrearTemaForm(forms.ModelForm):
     
     class Meta:
         model = Temaforo
-        fields = ['categoriaforo_idcategoriaforo', 'nombre', 'foro_idforo']
+        fields = ['nombre', 'foro_idforo']
 
 
 

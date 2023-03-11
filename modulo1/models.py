@@ -131,14 +131,14 @@ class Comentario(models.Model):
     usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario')
     imagen_idimagen = models.ForeignKey('Imagen', models.DO_NOTHING, db_column='imagen_idimagen')
     perfilforo_idperfilforo = models.ForeignKey('Perfilforo', models.DO_NOTHING, db_column='perfilforo_idperfilforo')
-    temaforo_idtemaforo = models.ForeignKey('Temaforo', models.DO_NOTHING, db_column='temaforo_idtemaforo', related_name='comentarios')
+    temaforo_idtemaforo = models.ForeignKey('Temaforo', models.DO_NOTHING, db_column='temaforo_idtemaforo')
     
     def __str__(self):
         return f'{self.usuario} -> {self.comentario}'
 
 #la clase meta nos dice como se va comportar esa clase
     class Meta:
-         #ordering nos ayuda a tener un orden ascedente
+        #ordering nos ayuda a tener un orden ascedente
         ordering = ['-fechahoracoment']
         managed = False
         db_table = 'comentario'
@@ -148,10 +148,6 @@ class Crearhiloforo(models.Model):
     idcrearhilo = models.AutoField(primary_key=True)
     hilo = models.CharField(max_length=60)
     perfilforo_idperfilforo = models.ForeignKey('Perfilforo', models.DO_NOTHING, db_column='perfilforo_idperfilforo')
-    
-    def __str__(self):
-        return f'Hilo: {self.hilo}'    
-    
 
     class Meta:
         managed = False
@@ -397,7 +393,6 @@ class Perfilforo(models.Model):
         return f'Perfil de {self.usuario}'
 
     class Meta:
-        ordering = ['-idperfilforo']
         managed = False
         db_table = 'perfilforo'
 
@@ -576,10 +571,9 @@ class Temaforo(models.Model):
     fecha = models.DateTimeField(default=timezone.now)
     usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario')
     foro_idforo = models.ForeignKey(Foro, models.DO_NOTHING, db_column='foro_idforo')
-    categoriaforo_idcategoriaforo = models.ForeignKey(Categoriaforo, models.DO_NOTHING, db_column='categoriaforo_idcategoriaforo')
-    
     def __str__(self):
         return f'Tema de: {self.usuario} : {self.nombre}'
+
     class Meta:
         ordering = ['-idtemaforo']
         managed = False
@@ -777,7 +771,6 @@ class Vistas(models.Model):
     class Meta:
         managed = False
         db_table = 'vistas'
-
 
 
 opciones_consultas = [

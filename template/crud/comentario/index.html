@@ -112,7 +112,7 @@
                         <div class="newsbox_content">
                             <!-- News Text -->
 
-                            {% for Comentario in Comentarios %}
+                            {% for Comentario in object_list %} <!--comentarios-->
                             <article>
                                 <div class="container-article">
                                     <img src="{{ comentario.perfilforo_idperfilforo.fotoperfil.url }}" />

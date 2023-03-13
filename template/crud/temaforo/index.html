@@ -23,20 +23,20 @@
       <div id="page_header">
         <h1>Slave to the Gam</h1>
         {% if messages %}
-          <ul class="messages">
-            {% for message in messages %}
-            <li {% if message.tags %} class="alert alert-{{ message.tags }}" {% endif %}>{{ message }}</li>
-            {% endfor %}
-          </ul>
-          {% endif %}
+        <ul class="messages">
+          {% for message in messages %}
+          <li {% if message.tags %} class="alert alert-{{ message.tags }}" {% endif %}>{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
         <!--Barra de busqueda-->
-          <form  method="GET" action="{% url 'modulo1:leertefo' %}">
-            <div class="input-box">
-              <i class="uil uil-search"></i>
-            <input type="text"  placeholder="Buscar..." value="{{ request.GET.buscar }}" name="buscar">
-            <button type="submit" class="boton" >Buscar</button>
+        <form method="GET" action="{% url 'modulo1:leertefo' %}">
+          <div class="input-box">
+            <i class="uil uil-search"></i>
+            <input type="text" placeholder="Buscar..." value="{{ request.GET.buscar }}" name="buscar">
+            <button type="submit" class="boton">Buscar</button>
           </div>
-          </form>
+        </form>
       </div>
       <!-- End of Page Header -->
       <!-- Start of Main Navigation Menu -->
@@ -77,32 +77,33 @@
               <!--............-paginancion.........................-->
 
               {% if is_paginated %}
-                <div >
-                  <ul class="pagination">                      
-                    {% for i in paginator.page_range %}                    
-                        <li class="page-item {% if page_obj.number == i %} active {% endif %} ">
-                          <a href="?page= {{ i }}" class="page-link">{{ i }}</a>
-                        </li>
-                    {% endfor %}
-                    
+              <div>
+                <ul class="pagination">
+                  {% for i in paginator.page_range %}
+                  <li class="page-item {% if page_obj.number == i %} active {% endif %} ">
+                    <a href="?page= {{ i }}" class="page-link">{{ i }}</a>
+                  </li>
+                  {% endfor %}
 
-                    <!--permite conocer si existe una pagina siguiente a la que no escontramos -->
-                    {% if page_obj.has_next %}
-                      <li class="page-item">
-                        <!--permite conocer la siguiente pagina-->
-                        <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a>
-                      </li>
-                    {%else %}
-                      <li class="page-item disabled">
-                        <!--permite conocer la siguiente pagina-->
-                        <a href="#" class="page-link">Next</a>
-                      </li>
-                    {% endif %}
-                  </ul>
-                </div>
+
+                  <!--permite conocer si existe una pagina siguiente a la que no escontramos -->
+                  {% if page_obj.has_next %}
+                  <li class="page-item">
+                    <!--permite conocer la siguiente pagina-->
+                    <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a>
+                  </li>
+                  {%else %}
+                  <li class="page-item disabled">
+                    <!--permite conocer la siguiente pagina-->
+                    <a href="#" class="page-link">Next</a>
+                  </li>
+                  {% endif %}
+                </ul>
+              </div>
               {% endif %}
               <div class="contenedor-button-foro">
-                <a href="crear" type="button" class="button-foro" > <img class="img-button-foro" src="https://cdn-icons-png.flaticon.com/512/61/61489.png"  alt="">Crear Tema</a>       
+                <a href="crear" type="button" class="button-foro"> <img class="img-button-foro"
+                    src="https://cdn-icons-png.flaticon.com/512/61/61489.png" alt="">Crear Tema</a>
               </div>
               <!-- News Date -->
               <div class="clearthis">&nbsp;</div>
@@ -110,29 +111,30 @@
             <div class="newsbox_content">
               <!-- News Text -->
 
-              {% for Temaforo in object_list %}
+              {% for publicacion in temas %}
               <article>
                 <div class="container-article">
-                  <div>                        
+                  <div>
                     <div class="post">
-                      <a href="{% url 'modulo1:leerco' %}">{{ Temaforo.nombre }}</a>
+                      <a href="{% url 'modulo1:leerco' id_tema=publicacion.id_tema %}">{{ publicacion.nombre }}</a>
                       <h2 class="username">
-                        <a href="#">@{{ Temaforo.usuario }}</a>
+                        <a href="#">@{{ publicacion.usuario }}</a>
                       </h2>
                       <i class="clock"></i>
-                      <time data-time="#">{{ Temaforo.fecha|naturaltime }}</time>
-                    </div>                  
-                  <br>
+                      <time data-time="#">{{ publicacion.fecha|naturaltime }}</time>
+                    </div>
+                    <br>
                     <a href="#">More...</a>
 
                   </div>
                 </div>
               </article>
               {% endfor %}
+              
             </div>
           </div>
           <!-- Start of News Box 4 -->
-          
+
           <!-- End of News Box 4 -->
           <!-- Start of News Box 5 -->
           <!-- End of News Box 5 -->
@@ -180,7 +182,8 @@
     <div id="leftcolumn">
       <!-- Start of Recent Record -->
       <div id="recentrecord">
-        <a href="{% url 'index' %}"><img class="logocoffee" src="{% static '/assets/img/logocoffee.png' %}" alt="Descripción de la imagen"></a>
+        <a href="{% url 'index' %}"><img class="logocoffee" src="{% static '/assets/img/logocoffee.png' %}"
+            alt="Descripción de la imagen"></a>
         <div class="clearthis">&nbsp;</div>
       </div>
       <!-- End of Recent Record -->
@@ -239,17 +242,18 @@
     <!-- Start of Page Footer -->
     <div id="page_footer"> <small>Web design by <a href="http://www.freewebsitetemplates.com">Free Website
           Templates</a></small> </div>
-        
+
     <div class="contenedor-button-foro-inferior">
-        <a href="crear" type="button" class="button-foro" > <img class="img-button-foro" src="https://cdn-icons-png.flaticon.com/512/61/61489.png"  alt="">Crear Tema</a>
-            
+      <a href="crear" type="button" class="button-foro"> <img class="img-button-foro"
+          src="https://cdn-icons-png.flaticon.com/512/61/61489.png" alt="">Crear Tema</a>
+
     </div>
   </div>
   <footer>
     <div class="row">
-        <p>Red Social con Django<br>hecha por: <a href="http://www.youtube.com/mundopython">Mundo Python</a></p>
+      <p>Red Social con Django<br>hecha por: <a href="http://www.youtube.com/mundopython">Mundo Python</a></p>
     </div>
-</footer>
+  </footer>
 </body>
 
 </html>

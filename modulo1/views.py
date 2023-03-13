@@ -274,6 +274,19 @@ class CategoriaforoEliminar(SuccessMessageMixin, DeleteView):
     
     
     #------------------------------------------COMENTARIO-----------------------------------------------------------------------------------#
+def listado_comentario(request, id_tema):
+    tema = Temaforo.objects.get(idtemaforo =id_tema)
+    #id_tema = request.GET.get('id_tema')
+    comentarios = Comentario.objects.filter(temaforo_idtemaforo=id_tema)
+    context = {
+        'temas': tema,
+        'comentarios': comentarios,
+        'id_tema': id_tema,
+    }
+    
+    return render(request, 'crud/comentario/index.html', context)  
+    
+    
 class ListadoComentario(ListView):
     model = Comentario
     context_object_name = 'comentarios'
@@ -1485,15 +1498,18 @@ class RfinancieroloteEliminar(SuccessMessageMixin, DeleteView):
     
     
 #-------------------------------------------Tema foro-------------------------------------------------------------------#
-def listado_tema(request, temaforo_idtemaforo):
-    temas = get_object_or_404(Temaforo, pk=temaforo_idtemaforo)
-    comentarios = Comentario.objects.filter(temaforo=temas)
-    context = {
-        'temas': temas,
-        'comentarios': comentarios
-    }
+def listado_tema(request):
+    temas = Temaforo.objects.all()
+    for tema in temas:
+        tema.id_tema = tema.idtemaforo # Agregar el ID del tema como una variable de objeto
+        context={
+            'temas':temas
+        }
+
+    return render(request, 'crud/temaforo/index.html', context)
     
-    return render(request, 'modulo1:leerco', context)
+    
+
 
 
 class ListadoTemaforo(ListView):

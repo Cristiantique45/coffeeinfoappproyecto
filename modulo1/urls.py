@@ -61,7 +61,7 @@ urlpatterns = [
 
 #------------------------------------------------------------------COMENTARIO------------------------------------------------------------------------------------------
 
-    path('Comentario/', ListadoComentario.as_view(template_name="crud/comentario/index.html"), name='leerco'),
+    path('comentario/<int:id_tema>/', listado_comentario, name='leerco'),
     
     # La ruta 'detalles' en donde mostraremos una pagina con los detalles de un Categoria o registro 
     path('Comentario/detalle/<int:pk>',login_required(ComentarioDetalle.as_view(template_name = "crud/comentario/detalle.html")), name='detallesco'),
@@ -623,7 +623,7 @@ urlpatterns = [
     
     #---------------------------------------------------------Tema foro---------------------------------------------------#
     
-    path('Tema/', ListadoTemaforo.as_view(template_name = "crud/temaforo/index.html"), name='leertefo'),
+    path('Tema/', listado_tema, name='leertefo'),
     
     # La ruta 'detalles' en donde mostraremos una pagina con los detalles de un Categoria o registro 
     path('Tema/detalle/<int:pk>',login_required(TemaforoDetalle.as_view(template_name = "crud/temaforo/detalle.html")), name='detallestefo'),

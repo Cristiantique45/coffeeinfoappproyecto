@@ -35,7 +35,7 @@ class ComentarioForm(forms.ModelForm):
     comentario = forms.Textarea() 
     class Meta:
         model =  Comentario
-        fields = ['comentario', 'imagen_idimagen']
+        fields = ['comentario', 'imagen_idimagen', 'temaforo_idtemaforo']
         
         
         

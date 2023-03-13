@@ -572,7 +572,7 @@ class Temaforo(models.Model):
     usuario = models.ForeignKey(User, models.DO_NOTHING, db_column='usuario')
     foro_idforo = models.ForeignKey(Foro, models.DO_NOTHING, db_column='foro_idforo')
     def __str__(self):
-        return f'Tema de: {self.usuario} : {self.nombre}'
+        return f'id = {self.idtemaforo} Tema de: {self.usuario} : {self.nombre}'
 
     class Meta:
         ordering = ['-idtemaforo']

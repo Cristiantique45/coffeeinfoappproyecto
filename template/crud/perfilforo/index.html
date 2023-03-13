@@ -1,295 +1,107 @@
 <!DOCTYPE html>
-{% load static %}
 <html lang="es">
 
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Perfil | Foro</title>
-    <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1" />
-    <link rel="stylesheet" href="/static/css/styles.css" type="text/css" media="screen" />
+    <title>Perfil | Coffeeinfoapp</title>
+    <link rel="stylesheet" href="css/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    <link href="/static/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-    <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
 </head>
 
-<body class="cuerpo-foro">
-    <div id="body_wrapper">
-        <div id="rightcolumn">
-            <!-- Start Page Header -->
-            <div id="page_header">
-                <h1>Slave to the Gam</h1>
-                <h3>Online Gaming Community</h3>
-            </div>
-            <!-- End of Page Header -->
-            <!-- Start of Main Navigation Menu -->
-            <div id="mainnav">
-                <ul>
-                    {% if request.user.is_authenticated %}
-                    <li id="mainnav_01"><a href="{% url 'index' %}">Home</a></li>
-                   <li id="mainnav_03"><a href="#">Acerca de</a></li>
-                    <li id="mainnav_04"><a href="{% url 'contacto' %}">Contacto</a></li>
-                    <li id="mainnav_05"><a href="#">Downloads</a></li>
-                    <li id="mainnav_06"><a href="#">Servers</a></li>
-                    <li id="mainnav_07"><a href="{% url 'modulo1:leerfr' %}">Foro</a></li>
-                    <li id="mainnav_10"><a href="{% url 'logout' %}">Salir</a></li>
-                    <li class="nombre-usuario"><a href="{% url 'modulo1:leerpef' %}">{{ user.username | lower }}</a></li>
-                    {% else %}
-                    <li id="mainnav_01"><a href="{% url 'index' %}">Home</a></li>
-                    <li id="mainnav_03"><a href="#">Acerca de </a></li>
-                    <li id="mainnav_04"><a href="{% url 'contacto' %}">Contacto</a></li>
-                    <li id="mainnav_05"><a href="#">Downloads</a></li>
-                    <li id="mainnav_06"><a href="#">Servers</a></li>
-                    <li id="mainnav_07"><a href="{% url 'modulo1:leerfr' %}">Foro</a></li>
-                    <li id="mainnav_08"><a href="{% url 'login' %}">Login</a></li>
-                    <li id="mainnav_09"><a href="{% url 'registrarse' %}">Registrarse</a></li>
-                    {% endif %}
-                  </ul>
-               
-                <div class="clearthis">&nbsp;</div>
-            </div>
-            <!-- End of Main Navigation Menu -->
-            <!-- Start of Center Column -->
-            <div id="centercolumn">
-                <div id="centercolumn_2">
-                    <!-- Start of News Box 1 -->
-                    <div class="newsbox">
-                        <div class="newsbox_header">
-                            <!-- News Title -->
-                            <h2>Perfiles</h2>
-                            <ul>
-                                <li class="second-nav" id="crear-post"><a href="crear" type="button">Responder</a></li>
-                                </li>
-                            </ul>
-                            <!-- News Date -->
-                            <div class="clearthis">&nbsp;</div>
-                        </div>
-                        <div class="newsbox_content">
-                            <!-- News Text -->
+<body>
+    {# Cargamos la librería #}
+    {% load bootstrap4 %}
+    {% load static %}
 
-                            {% for Perfilforo in object_list %}
-                            <article>
-                                <div class="container-article">
-                                    <img src="{{ Perfilforo.fotoperfil.url }}"/>
-                                    <div>
-                                        <h2 class="username"><a
-                                                href="#">@{{Perfilforo.usuario}}</a></h2>
-                                        <i class="clock"></i>
-                                        <time data-time="#">{{ Perfilforo.fnacimiento}}</time>
-                                        <div class="post">{{Perfilforo.intereses}}</div>
-                                        <a href="#">More...</a>
-
-                                    </div>
+    {% if messages %}
+    <ul class="messages list-group mb-3">
+        {% for message in messages %}
+        <li>{% if message.tags %} class="{{ message.tags }} list-group-item list-group-item-primary" {% endif %}>{{
+            message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <section class="seccion-perfil-usuario">
+        <div class="perfil-usuario-header">
+            <div class="perfil-usuario-portada">
+                <div class="perfil-usuario-avatar">
+                    <img src="https://previews.123rf.com/images/yupiramos/yupiramos1705/yupiramos170514531/77987158-dise%C3%B1o-gr%C3%A1fico-del-ejemplo-del-vector-del-icono-del-perfil-del-hombre-joven.jpg"
+                        alt="img-avatar">
+                    <button type="button" class="boton-avatar">
+                        <i class="icon-image"></i>
+                    </button>
+                </div>
+                <button type="button" class="boton-portada">
+                    <img src="https://cdn-icons-png.flaticon.com/128/2391/2391025.png" class="img-fondo"
+                        class="icon-image"></i>Cambiar el fondo
+                </button>
+            </div>
+        </div>
+        <div class="perfil-usuario-body">
+            <div class="perfil-usuario-bio">
+                <h3 class="titulo">NOMBRE DE USUARIO</h3>
+                <p class="texto"></p>
+                <table class="tablaperfil">
+                    <thead>
+                        <tr>
+                            <th>Fecha Nacimiento</th>
+                            <th>Intereses</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for Perfilforo in object_list %}
+                        <tr>
+                            <td>{{ Perfilforo.fnacimiento }}</td>
+                            <td>{{ Perfilforo.intereses }}</td>
+                            <form method="POST" action="eliminar/{{Perfilforo.idperfilforo}}">
+                                {% csrf_token %}
+                                <div class="btn-group">
+                                    <td><a href="editar/{{Perfilforo.idperfilforo}}" title="Editar" type="button"
+                                            class="boton-redes twitter" class="btn btn-primary">Editar</a></td>
                                 </div>
-                            </article>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <!-- End of News Box 1 -->
-                    <!-- Start of News Box 2 -->
-                    <div class="newsbox">
-                        <div class="newsbox_header">
-                            <!-- News Title -->
-                            <h2>Nvidia Forceware 81.87 Beta Released</h2>
-                            <!-- News Date -->
-                            <strong>10/27/2005</strong>
-                            <div class="clearthis">&nbsp;</div>
-                        </div>
-                        <div class="newsbox_content">
-                            <!-- News Text -->
-                            <p> Posted By: Drew </p>
-                            <p> Nvidia have released their latest "unofficial official" graphics drivers - the 81.87
-                                Beta Forceware.
-                                The main difference between these and the recent 81.85 drivers is the addition of
-                                optimizations/compatibility fixes for Call of Duty 2. <br />
-                                <br />
-                                http://www.nzone.com/object/nzone_downloads_winxp_2k_32bit_81.87.html
-                            </p>
-                        </div>
-                    </div>
-                    <!-- End of News Box 2 -->
-                    <!-- Start of News Box 3 -->
-                    <div class="newsbox">
-                        <div class="newsbox_header">
-                            <!-- News Title -->
-                            <h2>Match Tonight</h2>
-                            <!-- News Date -->
-                            <strong>10/25/2005</strong>
-                            <div class="clearthis">&nbsp;</div>
-                        </div>
-                        <div class="newsbox_content">
-                            <!-- News Text -->
-                            <p> Posted By: Drew </p>
-                            <p> Opponent: 505 Parachute Infantry Regiment <br />
-                                Server: S2tG #2 unless they post otherwise <br />
-                                Map: CoD_UO_carentan <br />
-                                Match Date: Wednesday October 26th @ 9:00 PM EST <br />
-                                S2tG has allies first
-                                Sign up on the calendar </p>
-                        </div>
-                    </div>
-                    <!-- End of News Box 3 -->
-                    <!-- Start of News Box 4 -->
-                    <div class="newsbox">
-                        <div class="newsbox_header">
-                            <!-- News Title -->
-                            <h2>CoD2 Review @IGN</h2>
-                            <!-- News Date -->
-                            <strong>10/25/2005</strong>
-                            <div class="clearthis">&nbsp;</div>
-                        </div>
-                        <div class="newsbox_content">
-                            <!-- News Text -->
-                            <p> Posted By: Randall </p>
-                            <p> http://pc.ign.com/articles/661/661230p1.html <br />
-                                <br />
-                                8.5 out of 10 because of health management implemetation.
-                            </p>
-                        </div>
-                    </div>
-                    <!-- End of News Box 4 -->
-                    <!-- Start of News Box 5 -->
-                    <div class="newsbox">
-                        <div class="newsbox_header">
-                            <!-- News Title -->
-                            <h2>Match Tonight</h2>
-                            <!-- News Date -->
-                            <strong>10/22/2005</strong>
-                            <div class="clearthis">&nbsp;</div>
-                        </div>
-                        <div class="newsbox_content">
-                            <!-- News Text -->
-                            <p> Posted By: Drew </p>
-                            <p> Opponent: |Terror Squad| <br />
-                                Server: S2tG #2 <br />
-                                Map: arnhem <br />
-                                Match Date: Saturday October 22th @ 9:30 PM EST <br />
-                                S2tG has allies first </p>
-                        </div>
-                    </div>
-                    <!-- End of News Box 5 -->
-                </div>
+                            </form>
+                        </tr>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <!-- End of Center Column -->
-            <!-- Start of Right Sidebar -->
-            <div id="rightsidebar">
-                <!-- Start of Team Roster -->
-                <div id="teamroster">
-                    <div id="teamroster_header">
-                        <h2><span>Team Roster</span></h2>
-                    </div>
-                    <div id="teamroster_content">
-                        <div id="teamroster_categories"> <a href="#">Staff</a> | <a href="#">Captains</a> </div>
-                        <ul>
-                            <li id="roster_twitch"><a href="#">twitch</a></li>
-                            <li id="roster_rock"><a href="#">rock</a></li>
-                            <li id="roster_badkarma"><a href="#">BadKarma</a></li>
-                            <li id="roster_mostly"><a href="#">mostly</a></li>
-                            <li id="roster_thebowl"><a href="#">TheBowl</a></li>
-                            <li id="roster_doggerz"><a href="#">doggerz</a></li>
-                            <li id="roster_drew"><a href="#">Drew</a></li>
-                            <li id="roster_nogusta"><a href="#">Nogusta</a></li>
-                        </ul>
-                        <div class="clearthis">&nbsp;</div>
-                        <div class="more_button"> <a href="#"><span>More</span></a> </div>
-                    </div>
-                </div>
-                <!-- End of Team Roster -->
-                <!-- Start of Team Sponsors -->
-                <div id="teamsponsors">
-                    <h2><span>Team Sponsors</span></h2>
-                    <div id="teamsponsors_content"> <a href="#"><img src="images/teamsponsors_surrealmedia.jpg"
-                                width="186" height="63" alt="Surreal Media" /></a>
-                        <div class="more_button"> <a href="#"><span>More</span></a> </div>
-                    </div>
-                </div>
-                <!-- End of Team Sponsors -->
-            </div>
-            <!-- End of Right Sidebar -->
-            <div class="clearthis">&nbsp;</div>
-        </div>
-        <!-- Start of Left Column -->
-        <div id="leftcolumn">
-            <!-- Start of Recent Record -->
-            <div id="recentrecord">
-                <h2><span>Recent Record</span></h2>
-                <ul>
-                    <li>TWL : 105 - 43 - 6</li>
-                    <li>OGL : 101 - 35 - 16</li>
-                    <li>TWL : 105 - 43 - 6</li>
+            <div class="perfil-usuario-footer">
+                <ul class="lista-datos">
+                    <h3>Publicar</h3>
+                    <li><i class="icono icon-image"></i>¿Que deseas publicar....?</li>
+
                 </ul>
-                <div class="clearthis">&nbsp;</div>
-            </div>
-            <!-- End of Recent Record -->
-            <!-- Start of Left Sidebar -->
-            <div id="leftsidebar">
-                <!-- Start of Latest Matches -->
-                <div id="latestmatch">
-                    <h2><span>Latest Match</span></h2>
-                    <ul>
-                        <li><a href="#">Home</a></li>
-                        <li>s2tg&#62;Dark|</li>
-                        <li>s2tg&#62;[#tS]</li>
-                        <li>s2tg&#62;WFC</li>
-                        <li>s2tg&#62;sinister</li>
-                        <li>s2tg&#62;|CoL|</li>
-                        <li>s2tg&#60;=3rd=</li>
-                        <li>s2tg&#60;|AAA|</li>
-                        <li>s2tg&#62;=[R.E.C]=</li>
-                        <li>s2tg&#60;|CBW|</li>
-                        <li>s2tg&#62;witw </li>
-                    </ul>
-                    <div class="more_button"> <a href="#"><span>More</span></a> </div>
-                    <div class="clearthis">&nbsp;</div>
-                </div>
-                <!-- End of Latest Matches -->
-                <!-- Start of Gaming Services -->
-                <div id="gamingservices">
-                    <h2><span>Gaming Services</span></h2>
-                    <ul>
-                        <li>CoD:UO 205.234.150.42:28960</li>
-                        <li>CoD:UO 205.234.150.42:28961</li>
-                        <li>Teamspeak 66.225.194.130:7900</li>
-                    </ul>
-                    <div class="more_button"> <a href="#"><span>More</span></a> </div>
-                    <div class="clearthis">&nbsp;</div>
-                </div>
-                <!-- End of Gaming Services -->
-                <!-- Start of Quick Links -->
-                <div id="quicklinks">
-                    <h2><span>Quick Links</span></h2>
-                    <ul>
-                        <li><a href="#">TeamWarfare League</a></li>
-                        <li><a href="#">OGL Online Gaming League</a></li>
-                        <li><a href="#">F.E.A.R Portal</a></li>
-                        <li><a href="#">GotFrag</a></li>
-                    </ul>
-                    <div class="more_button"> <a href="#"><span>More</span></a> </div>
-                    <div class="clearthis">&nbsp;</div>
-                </div>
-                <!-- End of Quick Links -->
-            </div>
-            <!-- End of Left Sidebar -->
-        </div>
-        <!-- End of Left Column -->
-        <div class="clearthis">&nbsp;</div>
-        <!-- Start of Page Footer -->
-        <div id="page_footer"> <small>Web design by <a href="http://www.freewebsitetemplates.com">Free Website
-                    Templates</a></small> </div>
+                <ul class="lista-datos">
+                    <h3>Imagen</h3>
+                    <li><i class="icono icon-image"></i>¿Que imagen deseas añadir....?</li>
 
-        <div class="contenedor-button-foro-inferior">
-            <a href="crear" type="button" class="button-foro" > <img class="img-button-foro" src="https://cdn-icons-png.flaticon.com/512/61/61489.png"  alt="">Crear Tema</a>
-                            
+                </ul>
+            </div>
+            <div class="redes-sociales">
+                <a href="" class="boton-redes facebook"><img
+                        src="https://cdn-icons-png.flaticon.com/512/3128/3128208.png" class="facebook-img"
+                        class="icon-Facebook"></i></a>
+                <a href="" class="boton-redes twitter"><img src="https://cdn-icons-png.flaticon.com/512/733/733635.png"
+                        class="twitter-img" class="icon-Twitter"></i></a>
+                <a href="" class="boton-redes instagram"><img
+                        src="https://cdn-icons-png.flaticon.com/128/1384/1384015.png" class="instagram-img"
+                        class="icon-Instagram"></i></a>
+            </div>
         </div>
 
-    </div>
-    <footer>
-        <div class="row">
-            <p>Red Social con Django<br>hecha por: <a href="http://www.youtube.com/mundopython">Mundo Python</a></p>
-        </div>
-    </footer>
+    </section>
+    <!----------------------FALTA BOTON DE CREAR Y Y ELIMANAR PERFILES Y FORMULARIO DE LA CREACION DEL PERFIL ------------------>
+
+
+
+
 </body>
 
 </html>

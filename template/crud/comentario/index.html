@@ -23,7 +23,7 @@
             <div id="page_header">
                 <h1>Slave to the Gam</h1>
                 <!--Barra de busqueda-->
-                <form method="GET" action="{% url 'modulo1:leerco' %}">
+                <form method="GET" action=""><!---->
                     <div class="input-box">
                         <i class="uil uil-search"></i>
                         <input type="text" placeholder="Buscar..." value="{{ request.GET.buscar }}" name="buscar">
@@ -112,17 +112,17 @@
                         <div class="newsbox_content">
                             <!-- News Text -->
 
-                            {% for Comentario in object_list %} <!--comentarios-->
+                            {% for comentario in comentarios %} <!--comentarios-->
                             <article>
                                 <div class="container-article">
                                     <img src="{{ comentario.perfilforo_idperfilforo.fotoperfil.url }}" />
                                     <div>
                                         <h2 class="username">
-                                            <a href="#">@{{Comentario.usuario}}</a>
+                                            <a href="#">@{{comentario.usuario}}</a>
                                         </h2>
                                         <i class="clock"></i>
-                                        <time data-time="#">{{ Comentario.fechahoracoment|naturaltime}}</time>
-                                        <div class="post">{{Comentario.comentario}}</div>
+                                        <time data-time="#">{{ comentario.fechahoracoment|naturaltime}}</time>
+                                        <div class="post">{{comentario.comentario}}</div>
                                         <a href="#">More...</a>
                                     </div>
                                 </div>
